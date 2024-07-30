@@ -1,5 +1,5 @@
 import { useMutation } from "@tanstack/react-query";
-import { Button, Col, Form, Input, Row, Typography } from "antd";
+import { Button, Col, Form, Input, Row, Typography, message } from "antd";
 import { Controller, useForm } from "react-hook-form";
 import { userApi } from "../../../apis/user.api";
 import {
@@ -9,6 +9,10 @@ import {
 import { useAppDispatch } from "../../../redux/hooks";
 import { setUser } from "../../../redux/slices/user.slice";
 import { setLocalStorage } from "../../../utils";
+import { useNavigate } from "react-router-dom";
+import { PATH } from "../../../routes/path";
+import * as yup from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
 
 interface FormValues {
   username: string;
@@ -16,6 +20,11 @@ interface FormValues {
 }
 
 const Login = () => {
+  const schema = yup.object({
+    username: yup.string().trim().required("*Tài khoản không được bỏ trống !"),
+    password: yup.string().trim().required("*Mật khẩu không được bỏ trống !"),
+  });
+
   const {
     handleSubmit,
     control,
@@ -25,9 +34,14 @@ const Login = () => {
       username: "",
       password: "",
     },
+    resolver: yupResolver(schema),
+    criteriaMode: "all",
   });
 
+  const [messageApi] = message.useMessage();
+
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
 
   const { mutate: handleLogin, isPending } = useMutation({
     mutationFn: (payload: UserLoginRequest) => userApi.login(payload),
@@ -35,7 +49,13 @@ const Login = () => {
       setLocalStorage<CurrentUser>("user", currentUser);
       dispatch(setUser(currentUser));
     },
-    onError: (error: any) => {},
+    onError: (error: any) => {
+      messageApi.open({
+        content: error.message,
+        type: "error",
+        duration: 2,
+      });
+    },
   });
 
   const onSubmit = (values: FormValues) => {
@@ -47,21 +67,21 @@ const Login = () => {
   };
 
   return (
-    <div className="w-[400px] ">
-      <div className="my-4 text-center">
-        <Typography className="font-bold text-3xl">Đăng nhập</Typography>
-        <Typography className="mt-2">Hi, Chào mừng bạn quay lại 👋</Typography>
+    <div className="container">
+      <div className="mt-3 mb-8 text-center">
+        <Typography className="text-white text-lg">
+          Đăng nhập để được nhiều ưu đãi, mua vé và bảo mật thông tin!
+        </Typography>
       </div>
 
       <Form layout="vertical" onFinish={handleSubmit(onSubmit)}>
         <Row gutter={[48, 16]}>
           <Col span={24}>
-            <label className="text-xs text-[#6A7280]">*Tài khoản</label>
+            <label className="text-xl text-white">*Tài Khoản:</label>
             <Controller
               name="username"
               control={control}
               render={({ field }) => {
-                // field : {name : "username" , onChange: ()=> , onBlur : ()=> {},...}
                 return (
                   <Input
                     {...field}
@@ -75,18 +95,14 @@ const Login = () => {
               }}
             />
             {errors?.username && (
-              <>
-                <p className="text-xs text-red-600">
-                  {(errors.username as any).types.required}
-                </p>
-                <p className="text-xs text-red-600">
-                  {(errors.username as any).types.min}
-                </p>
-              </>
+              <Typography className="mt-1 text-sm text-red-500">
+                {(errors.username as any).types.required}
+              </Typography>
             )}
           </Col>
+
           <Col span={24}>
-            <label className="text-xs text-[#6A7280]">*Mật khẩu</label>
+            <label className="text-xl text-white">*Mật khẩu:</label>
             <Controller
               name="password"
               control={control}
@@ -104,24 +120,37 @@ const Login = () => {
               }}
             />
             {errors?.password && (
-              <p className="text-xs text-red-600">{errors.password.message}</p>
+              <Typography className="mt-1 text-sm text-red-500">
+                {errors.password.message}
+              </Typography>
             )}
           </Col>
 
           <Col span={24}>
-            <Button type="primary" htmlType="submit" size="large" block>
+            <Typography className="text-sm text-white">
+              Chưa có tài khoản?{" "}
+              <span
+                className="text-green-400 font-medium cursor-pointer"
+                onClick={() => navigate(PATH.REGISTER)}
+              >
+                Tạo tài khoản
+              </span>
+            </Typography>
+          </Col>
+
+          <Col span={24}>
+            <Button
+              className="font-medium text-xl"
+              type="primary"
+              htmlType="submit"
+              size="large"
+              block
+            >
               Đăng nhập
             </Button>
           </Col>
         </Row>
       </Form>
-
-      <Typography className="mt-8 text-center">
-        Chưa có tài khoản?{" "}
-        <span className="text-blue-700 font-medium cursor-pointer">
-          Tạo tài khoản
-        </span>
-      </Typography>
     </div>
   );
 };
