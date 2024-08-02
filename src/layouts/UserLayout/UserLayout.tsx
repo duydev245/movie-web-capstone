@@ -1,9 +1,20 @@
+import React from "react"
+import Header from "./Header";
+import Footer from "./Footer";
 
-const UserLayout = () => {
+
+
+interface UserLayoutProps {
+  children: React.ReactNode;
+}
+
+const UserLayout: React.FC<UserLayoutProps> = ({ children }) => {
   return (
-    <div>
-      UserLayout
-    </div>
+    <>
+      <Header />
+      {children}
+      <Footer />
+    </>
   )
 }
 

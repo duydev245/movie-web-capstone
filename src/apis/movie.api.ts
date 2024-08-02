@@ -1,6 +1,6 @@
 import { GROUP_CODE, PAGE_SIZE } from "../constants";
 import { ApiResponse } from "../interfaces";
-import { DataListMovie } from "../interfaces/movie.interface";
+import { DataListBanner, DataListMovie } from "../interfaces/movie.interface";
 import fetcher from "./fetcher";
 
 export const movieApi = {
@@ -19,6 +19,49 @@ export const movieApi = {
 
       return response.data.content;
 
+    } catch (error: any) {
+      throw Error(error.response.data.content);
+    }
+  },
+  listBanner: async () => {
+    try {
+      const response = await fetcher.get<ApiResponse<DataListBanner>>(
+        "/QuanLyPhim/LayDanhSachBanner"
+      );
+      return response.data.content;
+    } catch (error: any) {
+      throw Error(error.response.data.content);
+    }
+  },
+  listMovie: async () => {
+    try {
+      const response = await fetcher.get<ApiResponse<DataListBanner>>(
+        `/QuanLyPhim/LayDanhSachPhim?maNhom=${GROUP_CODE}`
+      );
+
+      return response.data.content;
+    } catch (error: any) {
+      throw Error(error.response.data.content);
+    }
+  },
+  listCinemas: async () => {
+    try {
+      const response = await fetcher.get<ApiResponse<any>>(
+        `/QuanLyRap/LayThongTinHeThongRap`
+      );
+
+      return response.data.content;
+    } catch (error: any) {
+      throw Error(error.response.data.content);
+    }
+  },
+  listMovieByCinemas: async (cinema: any) => {
+    try {
+      const response = await fetcher.get<ApiResponse<any>>(
+        `/QuanLyRap/LayThongTinCumRapTheoHeThong?maHeThongRap=${cinema}`
+      );
+
+      return response.data.content;
     } catch (error: any) {
       throw Error(error.response.data.content);
     }

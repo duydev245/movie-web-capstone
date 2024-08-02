@@ -1,8 +1,15 @@
+import Banner from "./Banner"
+import Cinemas from "./Cinemas"
+import ListMovie from "./ListMovie"
+
+
 const Home = () => {
   return (
-    <div>
-      HomePage
-    </div>
+    <>
+      <Banner />
+      <ListMovie />
+      <Cinemas />
+    </>
   )
 }
 

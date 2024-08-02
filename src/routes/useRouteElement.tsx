@@ -9,6 +9,10 @@ import { LoginPage } from '../modules/Auth/Login';
 import { RegisterPage } from '../modules/Auth/Register';
 import { useAppSelector } from '../redux/hooks';
 import { PATH } from './path';
+import { UserLayout } from '../layouts/UserLayout';
+import { HomePage } from '../modules/User/Home';
+// import { UserLayout } from '../layouts/UserLayout';
+// import { HomePage } from '../modules/User/Home';
 
 const RejectedRouter = () => {
   const { currentUser } = useAppSelector((state) => state.user);
@@ -54,6 +58,7 @@ const useRouteElement = () => {
         },
       ],
     },
+    //Admin
     {
       path: PATH.ADMIN,
       element: <ProtectedRouter />,
@@ -96,6 +101,21 @@ const useRouteElement = () => {
         },
       ],
     },
+    // User
+    {
+      path: "/",
+      children: [
+        //Home
+        {
+          path: PATH.HOME,
+          element:
+            <UserLayout>
+              <HomePage />
+            </UserLayout>
+        }
+      ]
+
+    }
   ]);
 
   return routes;
