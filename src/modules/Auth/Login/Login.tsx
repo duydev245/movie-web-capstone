@@ -21,7 +21,11 @@ interface FormValues {
 
 const Login = () => {
   const schema = yup.object({
-    username: yup.string().trim().required("*Tài khoản không được bỏ trống !"),
+    username: yup
+      .string()
+      .trim()
+      .required("*Tài khoản không được bỏ trống !")
+      .min(4, "*Tài khoản phải trên 3 kí tự !"),
     password: yup.string().trim().required("*Mật khẩu không được bỏ trống !"),
   });
 
@@ -38,12 +42,12 @@ const Login = () => {
     criteriaMode: "all",
   });
 
-  const [messageApi] = message.useMessage();
+  const [messageApi, contextHolder] = message.useMessage();
 
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
-  const { mutate: handleLogin, isPending } = useMutation({
+  const { mutate: handleLogin } = useMutation({
     mutationFn: (payload: UserLoginRequest) => userApi.login(payload),
     onSuccess: (currentUser) => {
       setLocalStorage<CurrentUser>("user", currentUser);
@@ -53,7 +57,7 @@ const Login = () => {
       messageApi.open({
         content: error.message,
         type: "error",
-        duration: 2,
+        duration: 3,
       });
     },
   });
@@ -69,6 +73,7 @@ const Login = () => {
   return (
     <div className="container">
       <div className="mt-3 mb-8 text-center">
+        {contextHolder}
         <Typography className="text-white text-lg">
           Đăng nhập để được nhiều ưu đãi, mua vé và bảo mật thông tin!
         </Typography>
@@ -77,7 +82,15 @@ const Login = () => {
       <Form layout="vertical" onFinish={handleSubmit(onSubmit)}>
         <Row gutter={[48, 16]}>
           <Col span={24}>
-            <label className="text-xl text-white">*Tài Khoản:</label>
+            <label className="text-base text-white">*Tài Khoản:</label>
+            {errors?.username && (
+              <>
+                {" "}
+                <span className="mt-1 text-sm text-red-500">
+                  {errors.username.message}
+                </span>
+              </>
+            )}
             <Controller
               name="username"
               control={control}
@@ -94,15 +107,16 @@ const Login = () => {
                 );
               }}
             />
-            {errors?.username && (
-              <Typography className="mt-1 text-sm text-red-500">
-                {(errors.username as any).types.required}
-              </Typography>
-            )}
           </Col>
 
           <Col span={24}>
-            <label className="text-xl text-white">*Mật khẩu:</label>
+            <label className="text-base text-white">*Mật khẩu:</label>
+            {errors?.password && (
+              <span className="mt-1 text-sm text-red-500">
+                {" "}
+                {errors.password.message}
+              </span>
+            )}
             <Controller
               name="password"
               control={control}
@@ -119,11 +133,6 @@ const Login = () => {
                 );
               }}
             />
-            {errors?.password && (
-              <Typography className="mt-1 text-sm text-red-500">
-                {errors.password.message}
-              </Typography>
-            )}
           </Col>
 
           <Col span={24}>

@@ -4,6 +4,7 @@ import {
   CurrentUser,
   DataListUser,
   UserLoginRequest,
+  UserRegisterRequest,
 } from "./../interfaces/user.interface";
 import fetcher from "./fetcher";
 
@@ -13,6 +14,19 @@ export const userApi = {
       const response = await fetcher.post<ApiResponse<CurrentUser>>(
         "/QuanLyNguoiDung/DangNhap",
         data
+      );
+
+      return response.data.content;
+    } catch (error: any) {
+      throw Error(error.response.data.content);
+    }
+  },
+
+  register: async (payload: UserRegisterRequest) => {
+    try {
+      const response = await fetcher.post<ApiResponse<CurrentUser>>(
+        "/QuanLyNguoiDung/DangKy",
+        payload
       );
 
       return response.data.content;

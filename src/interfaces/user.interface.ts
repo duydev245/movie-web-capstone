@@ -2,6 +2,14 @@ export interface UserLoginRequest {
   taiKhoan: string;
   matKhau: string;
 }
+export interface UserRegisterRequest {
+  taiKhoan: string;
+  matKhau: string;
+  email: string,
+  maNhom: string;
+  soDt: string,
+  hoTen: string
+}
 
 export interface CurrentUser {
   taiKhoan: string;

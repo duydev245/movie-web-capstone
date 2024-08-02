@@ -10,6 +10,7 @@ import { Button, Layout, Menu, theme } from "antd";
 import React, { FC, useState } from "react";
 import { PATH } from "../../routes/path";
 import { useLocation, useNavigate } from "react-router-dom";
+import { removeLocalStorage } from "../../utils";
 
 interface AdminLayoutProps {
   children: React.ReactNode;
@@ -18,16 +19,22 @@ interface AdminLayoutProps {
 const { Header, Sider, Content } = Layout;
 
 const AdminLayout: FC<AdminLayoutProps> = ({ children }) => {
-    const navigate = useNavigate()
+  const navigate = useNavigate();
   const [collapsed, setCollapsed] = useState(false);
   const location = useLocation();
   const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
+
+  const handleLogOut = () => {
+    removeLocalStorage("user");
+    window.location.reload();
+  };
+
   return (
-    <Layout>
+    <Layout className="h-screen">
       <Sider trigger={null} collapsible collapsed={collapsed}>
-      <div className="text-center flex items-center h-[80px] justify-center cursor-pointer">
+        <div className="text-center flex items-center h-[80px] justify-center cursor-pointer">
           <img src="/logo.png" width={40} onClick={() => navigate(PATH.HOME)} />
         </div>
         <Menu
@@ -35,7 +42,7 @@ const AdminLayout: FC<AdminLayoutProps> = ({ children }) => {
           mode="inline"
           defaultSelectedKeys={[location.pathname]}
           onSelect={(item) => {
-            navigate(item.key)
+            navigate(item.key);
           }}
           items={[
             {
@@ -61,8 +68,12 @@ const AdminLayout: FC<AdminLayoutProps> = ({ children }) => {
           ]}
         />
       </Sider>
+
       <Layout>
-        <Header style={{ padding: 0, background: colorBgContainer }}>
+        <Header
+          style={{ padding: 0, background: colorBgContainer }}
+          className="flex items-center justify-between"
+        >
           <Button
             type="text"
             icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
@@ -73,6 +84,15 @@ const AdminLayout: FC<AdminLayoutProps> = ({ children }) => {
               height: 64,
             }}
           />
+          <Button
+            onClick={handleLogOut}
+            className="me-5 font-medium"
+            size="large"
+            type="default"
+            danger
+          >
+            Log Out
+          </Button>
         </Header>
         <Content
           style={{
@@ -81,6 +101,7 @@ const AdminLayout: FC<AdminLayoutProps> = ({ children }) => {
             minHeight: 280,
             background: colorBgContainer,
             borderRadius: borderRadiusLG,
+            overflowY: "scroll",
           }}
         >
           {children}

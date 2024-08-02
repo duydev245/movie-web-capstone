@@ -16,19 +16,30 @@ const AuthLayout: React.FC<AuthLayoutProps> = ({ children }) => {
   useEffect(() => {
     setTimeout(() => {
       setIsLoading(false);
-    }, 500); 
+    }, 500);
   }, []);
 
   return (
     <div className="authLayout">
       {isLoading ? (
         <div className="loading-indicator">
-          <img src="/logoTixLoading.png" className="spinner" width={250} alt="logo"></img>
+          <img
+            src="/logoTixLoading.png"
+            className="spinner"
+            width={250}
+            alt="logo"
+          ></img>
         </div>
       ) : (
-        <div className="py-16 px-10" id="overlayCompo">
-          <div className="text-center mt-5">
-            <img src="/login.png" width={250} alt="Login" />
+        <div className="py-8 px-10" id="overlayCompo">
+          <div className="text-center container">
+            <img
+              className="cursor-pointer"
+              src="/login.png"
+              width={250}
+              alt="Login"
+              onClick={() => navigate(PATH.HOME)}
+            />
           </div>
           <button
             className="button1 cursor-pointer"
