@@ -7,6 +7,8 @@ import {
   Pagination,
   Popconfirm,
   Rate,
+  Select,
+  Space,
   Table,
   Tag,
   Typography,
@@ -263,6 +265,10 @@ const MovieManagement = () => {
     }
   };
 
+  const handleChange = (value: string) => {
+    console.log(`selected ${value}`);
+  };
+
   if (!isLoading && error) {
     return <div>Something went wrong</div>;
   }
@@ -284,16 +290,29 @@ const MovieManagement = () => {
           ]}
         />
 
-        <Button
-          size="large"
-          type="primary"
-          onClick={() => {
-            setDataEdit(undefined);
-            openModal();
-          }}
-        >
-          Add Movie
-        </Button>
+        <Space wrap>
+          <Select
+            defaultValue="Upcoming.."
+            style={{ width: 120, height: 40 }}
+            onChange={handleChange}
+            options={[
+              { value: "GP01", label: "GP01", disabled: true },
+              { value: "GP02", label: "GP02", disabled: true },
+              { value: "GP03", label: "GP03", disabled: true },
+            ]}
+          />
+
+          <Button
+            size="large"
+            type="primary"
+            onClick={() => {
+              setDataEdit(undefined);
+              openModal();
+            }}
+          >
+            Add Movie
+          </Button>
+        </Space>
       </div>
 
       <h3 className="font-medium text-2xl mb-3">List movies</h3>

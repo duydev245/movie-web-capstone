@@ -6,7 +6,6 @@ import {
   DatePicker,
   Form,
   GetProps,
-  Image,
   Input,
   Modal,
   Radio,
