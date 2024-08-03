@@ -44,7 +44,7 @@ export const movieApi = {
       throw Error(error.response.data.content);
     }
   },
-  listCinemas: async () => {
+  listCinemasId: async () => {
     try {
       const response = await fetcher.get<ApiResponse<any>>(
         `/QuanLyRap/LayThongTinHeThongRap`
@@ -55,7 +55,7 @@ export const movieApi = {
       throw Error(error.response.data.content);
     }
   },
-  listMovieByCinemas: async (cinema: any) => {
+  listCinemasName: async (cinema: any) => {
     try {
       const response = await fetcher.get<ApiResponse<any>>(
         `/QuanLyRap/LayThongTinCumRapTheoHeThong?maHeThongRap=${cinema}`
@@ -66,4 +66,16 @@ export const movieApi = {
       throw Error(error.response.data.content);
     }
   },
+  listMovieByCinemas: async (cinema: any) => {
+    try {
+      const response = await fetcher.get<ApiResponse<any>>(
+        `/QuanLyRap/LayThongTinLichChieuHeThongRap?maHeThongRap=${cinema}&maNhom=${GROUP_CODE}`
+      );
+
+      return response.data.content
+    } catch (error: any) {
+      throw Error(error.response.data.content);
+    }
+  },
+
 };

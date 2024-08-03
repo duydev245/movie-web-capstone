@@ -13,7 +13,6 @@ const ListMovie = () => {
         queryKey: ['list-movie'],
         queryFn: () => movieApi.listMovie(),
     });
-    console.log({ data, isLoading, error });
 
     if (!isLoading && error) {
         return <div>Something went wrong</div>;

@@ -4,44 +4,56 @@ import { useQuery } from '@tanstack/react-query';
 import React, { useEffect, useState } from 'react'
 import { movieApi } from '../../../apis/movie.api';
 import { Content } from 'antd/es/layout/layout';
-import { Button, Card, Divider, Tabs, Typography } from 'antd';
-import { useAppDispatch } from '../../../redux/hooks';
-import { setCinemas, setCinemasInfo } from '../../../redux/slices/movie.slice';
+import { Button, Card, Col, Divider, Row, Tabs, Typography } from 'antd';
 
 const Cinemas = () => {
 
     const [cinemaClick, setCinemaClick] = useState("BHDStar");
+    const [cinemaIdClick, setCinemaIdClick] = useState("bhd-star-cineplex-3-2");
 
-    const dispatch = useAppDispatch();
-
-    const { data: listCinemas, isLoading, error } = useQuery({
+    const { data: listCinemasId, isLoading, error } = useQuery({
         queryKey: ['list-cinemas'],
-        queryFn: () => movieApi.listCinemas(),
+        queryFn: () => movieApi.listCinemasId(),
+    });
+
+    const { data: listCinemasName } = useQuery({
+
+        queryKey: ['list-cinemas-name', cinemaClick],
+        queryFn: () => {
+            if (cinemaClick) {
+                return movieApi.listCinemasName(cinemaClick)
+            }
+        },
+        enabled: !!cinemaClick,
     });
 
     const { data: listMovieByCinemas } = useQuery({
         queryKey: ['list-movie-by-cinemas', cinemaClick],
-        queryFn: () => movieApi.listMovieByCinemas(cinemaClick),
-        enabled: !!cinemaClick,
+        queryFn: () => {
+            if (cinemaIdClick) {
+                return movieApi.listMovieByCinemas(cinemaClick)
+            }
+        },
     });
-    console.log("listMBC", listMovieByCinemas);
 
     const handleMaHeThongRap = (cinemaClick: any) => {
-        console.log('cinemaClick: ', cinemaClick);
         setCinemaClick(cinemaClick)
     };
 
+    const handleTenHeThongRap = (tenRap: any) => {
+        setCinemaIdClick(tenRap)
+    }
+
     useEffect(() => {
-        dispatch(setCinemas(listCinemas))
-        dispatch(setCinemasInfo(listMovieByCinemas))
-    }, [listCinemas, listMovieByCinemas, dispatch]);
+    }, [cinemaClick, cinemaIdClick]);
 
 
     if (!isLoading && error) {
         return <div>Something went wrong</div>;
     }
 
-    if (!listCinemas) return ''
+    if (!listCinemasId) return ''
+    if (!listCinemasName) return ''
     if (!listMovieByCinemas) return ''
 
     return (
@@ -55,7 +67,7 @@ const Cinemas = () => {
                 <Tabs
                     className=''
                     tabPosition={'left'}
-                    items={listCinemas.map((item: any) => {
+                    items={listCinemasId.map((item: any) => {
                         return {
                             label:
                                 <div onClick={() => { handleMaHeThongRap(item.maHeThongRap) }}>
@@ -66,18 +78,46 @@ const Cinemas = () => {
                                 </div>,
                             key: item.maHeThongRap,
                             children:
-                                (<div className='cursor-pointer block mt-5'>
-                                    {listMovieByCinemas.map((cinema: any) => {
-                                        return (
-                                            <div key={cinema.maCumRap}>
-                                                <Button className='mb-2 w-60 h-[60px] flex-col items-start truncate'>
-                                                    <h4 className='font-sans'>{cinema.tenCumRap}</h4>
-                                                    <p className='font-medium'>{cinema.diaChi}</p>
-                                                </Button>
-                                            </div>
-                                        )
-                                    })}
-                                </div>)
+                                (
+                                    <Row gutter={24}>
+                                        <Col span={7} className='cursor-pointer block'>
+                                            {listCinemasName.map((cinema: any) => {
+                                                return (
+
+                                                    <div key={cinema.maCumRap}>
+
+                                                        <Button onClick={() => { handleTenHeThongRap(cinema.maCumRap) }} className='btn-hover mb-2 w-60 h-[60px] flex-col items-start overflow-hidden'>
+                                                            <h5 className='font-sans'>{cinema.tenCumRap}</h5>
+                                                            <p className='righttoleft font-medium '>{cinema.diaChi}</p>
+                                                        </Button>
+
+                                                    </div>
+                                                )
+                                            })}
+                                        </Col>
+                                        <Col span={17}>
+                                            {listMovieByCinemas.map((listcinemas: any) => {
+                                                return listcinemas.lstCumRap.map((cinemaId: any) => {
+                                                    if (cinemaId.maCumRap === cinemaIdClick) {
+                                                        return (
+                                                            <div key={cinemaId.maCumRap} className='flex grid grid-cols-4 gap-5'>
+                                                                {cinemaId.danhSachPhim.map((phim: any) => {
+                                                                    return (<Card.Grid key={phim.maPhim} onClick={() => { }}>
+                                                                        <div className='flex flex-col'>
+                                                                            <img className='h-[100px] w-full object-contain' src={phim.hinhAnh} alt="" />
+                                                                            <h4 className=' text-center'>{phim.tenPhim}</h4>
+                                                                        </div>
+                                                                    </Card.Grid>)
+                                                                })}
+                                                            </div>
+                                                        )
+                                                    }
+                                                })
+                                            })}
+                                        </Col>
+                                    </Row>
+
+                                )
                         };
                     })}
                 />
@@ -88,26 +128,3 @@ const Cinemas = () => {
 }
 
 export default Cinemas
-
-// <div key={cinema.maHeThongRap}>
-//     {/* {cenema.lstCumRap.map((cumRap) => {
-//         return (
-//             <div key={cumRap.maHeThongRap}>
-//                 <Card title={cumRap.tenCumRap}>
-//                     {cumRap.danhSachPhim.map((listPhim) => {
-//                         return (
-//                             <Card.Grid key={listPhim.maPhim} onClick={() => { handleDetailMovie(listPhim.maPhim) }}>
-//                                 <div>
-//                                     <img className='h-60 w-full object-contain' src={listPhim.hinhAnh} alt="" />
-//                                 </div>
-//                                 <h1 className='text-center mt-5 text-3xl font-thin'>
-//                                     {listPhim.tenPhim}
-//                                 </h1>
-//                             </Card.Grid>
-//                         )
-//                     })}
-//                 </Card>
-//             </div>
-//         )
-//     })} */}
-// </div>

@@ -1,8 +1,9 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-    cinemas: null,
-    cinemasInfor: null,
+    cinemasId: null,
+    cinemasName: null,
+    movieByCinema: null,
 };
 
 const dataMovie = createSlice({
@@ -10,14 +11,17 @@ const dataMovie = createSlice({
     initialState,
 
     reducers: {
-        setCinemas: (state, action) => {
-            state.cinemas = action.payload
+        setCinemasId: (state, action) => {
+            state.cinemasId = action.payload
         },
-        setCinemasInfo: (state, action) => {
-            state.cinemasInfor = action.payload
+        setCinemasName: (state, action) => {
+            state.cinemasName = action.payload
+        },
+        setMovieByCinema: (state, action) => {
+            state.movieByCinema = action.payload
         },
     },
 });
 
-export const { setCinemas, setCinemasInfo } = dataMovie.actions;
+export const { setCinemasId, setCinemasName, setMovieByCinema } = dataMovie.actions;
 export default dataMovie
