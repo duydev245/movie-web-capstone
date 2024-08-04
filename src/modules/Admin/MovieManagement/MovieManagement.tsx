@@ -7,8 +7,6 @@ import {
   Pagination,
   Popconfirm,
   Rate,
-  Select,
-  Space,
   Table,
   Tag,
   Typography,
@@ -252,21 +250,20 @@ const MovieManagement = () => {
     formData.append("hot", formValues.hot.toString());
     formData.append("dangChieu", formValues.trangThai ? "true" : "false");
     formData.append("sapChieu", formValues.trangThai ? "false" : "true");
-    formData.append(
-      "ngayKhoiChieu",
-      format(new Date(formValues.ngayKhoiChieu), "dd/MM/yyyy")
-    );
+    if (formValues.ngayKhoiChieu) {
+      formData.append(
+        "ngayKhoiChieu",
+        format(new Date(formValues.ngayKhoiChieu), "dd/MM/yyyy")
+      );
+    }
     formData.append("maNhom", GROUP_CODE);
+
     if (dataEdit) {
       formData.append("maPhim", dataEdit.maPhim.toString());
       handleUpdateMovieApi(formData);
     } else {
       handleAddMovieApi(formData);
     }
-  };
-
-  const handleChange = (value: string) => {
-    console.log(`selected ${value}`);
   };
 
   if (!isLoading && error) {
@@ -290,29 +287,16 @@ const MovieManagement = () => {
           ]}
         />
 
-        <Space wrap>
-          <Select
-            defaultValue="Upcoming.."
-            style={{ width: 120, height: 40 }}
-            onChange={handleChange}
-            options={[
-              { value: "GP01", label: "GP01", disabled: true },
-              { value: "GP02", label: "GP02", disabled: true },
-              { value: "GP03", label: "GP03", disabled: true },
-            ]}
-          />
-
-          <Button
-            size="large"
-            type="primary"
-            onClick={() => {
-              setDataEdit(undefined);
-              openModal();
-            }}
-          >
-            Add Movie
-          </Button>
-        </Space>
+        <Button
+          size="large"
+          type="primary"
+          onClick={() => {
+            setDataEdit(undefined);
+            openModal();
+          }}
+        >
+          Add Movie
+        </Button>
       </div>
 
       <h3 className="font-medium text-2xl mb-3">List movies</h3>

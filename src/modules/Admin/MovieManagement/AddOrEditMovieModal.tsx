@@ -17,6 +17,8 @@ import { FC, useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import dayjs from "dayjs";
 import { MovieItem } from "../../../interfaces/movie.interface";
+import * as yup from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
 
 type RangePickerProps = GetProps<typeof DatePicker.RangePicker>;
 
@@ -27,8 +29,8 @@ export interface FormValues {
   trangThai: boolean;
   hot: boolean;
   danhGia: string;
-  ngayKhoiChieu: any;
-  hinhAnh: any;
+  ngayKhoiChieu: Date | null;
+  hinhAnh: File | null;
 }
 
 interface AddOrEditMovieModalProps {
@@ -46,20 +48,47 @@ const AddOrEditMovieModal: FC<AddOrEditMovieModalProps> = ({
   dataEdit,
   onSubmit,
 }) => {
-  const { handleSubmit, control, setValue, watch, reset } = useForm<FormValues>(
-    {
-      defaultValues: {
-        tenPhim: "",
-        trailer: "",
-        moTa: "",
-        trangThai: false,
-        hot: false,
-        danhGia: "",
-        ngayKhoiChieu: "",
-        hinhAnh: undefined,
-      },
-    }
-  );
+  const schema = yup.object({
+    tenPhim: yup
+      .string()
+      .trim()
+      .required("* Movie name không được bỏ trống ! "),
+    trailer: yup.string().trim().required("* Trailer không được bỏ trống ! "),
+    moTa: yup.string().trim().required("* Description không được bỏ trống ! "),
+    danhGia: yup.string().trim().required("* Rate không được bỏ trống ! "),
+    trangThai: yup.boolean().required(),
+    hot: yup.boolean().required(),
+    ngayKhoiChieu: yup
+      .date()
+      .nullable()
+      .required("* Release date không được bỏ trống ! "),
+    hinhAnh: yup
+      .mixed()
+      .nullable()
+      .required("* Hình ảnh không được bỏ trống ! "),
+  });
+
+  const {
+    handleSubmit,
+    control,
+    setValue,
+    watch,
+    reset,
+    formState: { errors },
+  } = useForm<FormValues>({
+    defaultValues: {
+      tenPhim: "",
+      trailer: "",
+      moTa: "",
+      trangThai: false,
+      hot: false,
+      danhGia: "",
+      ngayKhoiChieu: null,
+      hinhAnh: null,
+    },
+    resolver: yupResolver(schema as any),
+    criteriaMode: "all",    
+  });
 
   const [imageUpload, setImageUpload] = useState("");
 
@@ -78,7 +107,12 @@ const AddOrEditMovieModal: FC<AddOrEditMovieModalProps> = ({
       setValue("trangThai", dataEdit.dangChieu);
       setValue("hot", dataEdit.hot);
       setValue("danhGia", dataEdit.danhGia.toString());
-      setValue("ngayKhoiChieu", dayjs(new Date(dataEdit.ngayKhoiChieu)));
+      setValue(
+        "ngayKhoiChieu",
+        dataEdit.ngayKhoiChieu
+          ? dayjs(new Date(dataEdit.ngayKhoiChieu)).toDate()
+          : null
+      );
       setImageUpload(dataEdit.hinhAnh);
     }
   }, [dataEdit]);
@@ -98,7 +132,10 @@ const AddOrEditMovieModal: FC<AddOrEditMovieModalProps> = ({
         </Typography>
       }
       centered
-      onCancel={onCloseModal}
+      onCancel={() => {
+        onCloseModal();
+        dataEdit?.hinhAnh && setImageUpload(dataEdit.hinhAnh);
+      }}
       footer={false}
       width={700}
     >
@@ -108,6 +145,12 @@ const AddOrEditMovieModal: FC<AddOrEditMovieModalProps> = ({
             <label className="text-sm">
               <span className="text-red-600">*</span> Movie name
             </label>
+            {errors.tenPhim && (
+              <span className="mt-1 text-sm text-red-500">
+                {" "}
+                {errors.tenPhim.message}
+              </span>
+            )}
             <Controller
               name="tenPhim"
               control={control}
@@ -125,6 +168,12 @@ const AddOrEditMovieModal: FC<AddOrEditMovieModalProps> = ({
             <label className="text-sm">
               <span className="text-red-600">*</span> Trailer
             </label>
+            {errors.trailer && (
+              <span className="mt-1 text-sm text-red-500">
+                {" "}
+                {errors.trailer.message}
+              </span>
+            )}
             <Controller
               name="trailer"
               control={control}
@@ -142,6 +191,12 @@ const AddOrEditMovieModal: FC<AddOrEditMovieModalProps> = ({
             <label className="text-sm">
               <span className="text-red-600">*</span> Description
             </label>
+            {errors.moTa && (
+              <span className="mt-1 text-sm text-red-500">
+                {" "}
+                {errors.moTa.message}
+              </span>
+            )}
             <Controller
               name="moTa"
               control={control}
@@ -184,6 +239,12 @@ const AddOrEditMovieModal: FC<AddOrEditMovieModalProps> = ({
             <label className="text-sm">
               <span className="text-red-600">*</span> Rate
             </label>
+            {errors.danhGia && (
+              <span className="mt-1 text-sm text-red-500">
+                {" "}
+                {errors.danhGia.message}
+              </span>
+            )}
             <Controller
               control={control}
               name="danhGia"
@@ -203,6 +264,12 @@ const AddOrEditMovieModal: FC<AddOrEditMovieModalProps> = ({
             <label className="text-sm">
               <span className="text-red-600">*</span> Release date
             </label>
+            {errors.ngayKhoiChieu && (
+              <span className="mt-1 text-sm text-red-500">
+                {" "}
+                {errors.ngayKhoiChieu.message}
+              </span>
+            )}
             <Controller
               name="ngayKhoiChieu"
               control={control}
@@ -214,11 +281,21 @@ const AddOrEditMovieModal: FC<AddOrEditMovieModalProps> = ({
                   placeholder="DD/MM/YYYY"
                   format={"DD/MM/YYYY"}
                   disabledDate={!statusMovie ? disabledDate : undefined}
+                  value={field.value ? dayjs(field.value) : null}
+                  onChange={(date) =>
+                    field.onChange(date ? date.toDate() : null)
+                  }
                 />
               )}
             />
           </Col>
           <Col span={24}>
+            {errors.hinhAnh && (
+              <span className="mt-1 text-sm text-red-500">
+                {" "}
+                {errors.hinhAnh.message}
+              </span>
+            )}
             <Controller
               control={control}
               name="hinhAnh"
@@ -243,10 +320,12 @@ const AddOrEditMovieModal: FC<AddOrEditMovieModalProps> = ({
                       {watchHinhAnh || imageUpload ? (
                         <div className="relative w-full h-full">
                           <img
-                            className="w-[105px] h-[105px] rounded-lg"                       
+                            className="w-[105px] h-[105px] rounded-lg"
                             src={
                               imageUpload ||
-                              URL.createObjectURL(new Blob([watchHinhAnh]))
+                              (watchHinhAnh instanceof File
+                                ? URL.createObjectURL(watchHinhAnh)
+                                : undefined)
                             }
                             onClick={(event) => {
                               event.stopPropagation();
@@ -257,7 +336,7 @@ const AddOrEditMovieModal: FC<AddOrEditMovieModalProps> = ({
                             className="absolute top-1 right-1 cursor-pointer text-red-500 text-base"
                             onClick={(event) => {
                               event.stopPropagation();
-                              setValue("hinhAnh", undefined);
+                              setValue("hinhAnh", null);
                               setImageUpload("");
                             }}
                           >
@@ -277,7 +356,14 @@ const AddOrEditMovieModal: FC<AddOrEditMovieModalProps> = ({
             />
           </Col>
           <Col span={24} className="flex justify-end">
-            <Button size="large" type="default" onClick={onCloseModal}>
+            <Button
+              size="large"
+              type="default"
+              onClick={() => {
+                onCloseModal();
+                dataEdit?.hinhAnh && setImageUpload(dataEdit.hinhAnh);
+              }}
+            >
               Cancel
             </Button>
             <Button

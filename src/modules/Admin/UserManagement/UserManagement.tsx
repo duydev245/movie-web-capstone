@@ -1,20 +1,17 @@
 import { useQuery } from "@tanstack/react-query";
 import { Breadcrumb, Button, Pagination, Table, Tag } from "antd";
-import React, { useState } from "react";
+import { useState } from "react";
 import { userApi } from "../../../apis/user.api";
-import { PAGE_SIZE, USER_TYPES_MAPPING } from "../../../constants";
+import { USER_TYPES_MAPPING } from "../../../constants";
 import { UserItem } from "../../../interfaces/user.interface";
 
 const UserManagement = () => {
   const [currentPage, setCurrentPage] = useState(1);
-  const [pageSize, setPageSize] = useState(PAGE_SIZE);
 
   const { data, isLoading, error } = useQuery({
-    queryKey: ["list-user", { currentPage, pageSize } ],
-    queryFn: () => userApi.getListUser({ page: currentPage, pageSize }),
+    queryKey: ["list-user", { currentPage }],
+    queryFn: () => userApi.getListUser({ page: currentPage }),
   });
-
-  console.log("data", data);
 
   const columns = [
     {
@@ -74,6 +71,9 @@ const UserManagement = () => {
   const dataSource = data?.items || [];
   const total = data?.totalCount || 0;
 
+  if (!isLoading && error) {
+    return <div>Something went wrong</div>;
+  }
 
   return (
     <div>
@@ -95,6 +95,7 @@ const UserManagement = () => {
           Add User
         </Button>
       </div>
+
       <h3 className="font-medium text-3xl mb-3">List User</h3>
       <Table
         rowKey="taiKhoan"
@@ -107,12 +108,8 @@ const UserManagement = () => {
         <Pagination
           total={total}
           defaultCurrent={currentPage}
-        //   defaultPageSize={5}
-          onChange={(page: number, pSize: number) => {
+          onChange={(page: number) => {
             setCurrentPage(page);
-            // if (pSize !== pageSize) {
-            //   setPageSize(pSize);
-            // }
           }}
           showSizeChanger={false}
         />

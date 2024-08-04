@@ -6,7 +6,7 @@ import {
   VideoCameraOutlined,
   SettingOutlined,
 } from "@ant-design/icons";
-import { Button, Layout, Menu, theme } from "antd";
+import { Button, Layout, Menu, Select, Space, theme } from "antd";
 import React, { FC, useState } from "react";
 import { PATH } from "../../routes/path";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -29,6 +29,10 @@ const AdminLayout: FC<AdminLayoutProps> = ({ children }) => {
   const handleLogOut = () => {
     removeLocalStorage("user");
     window.location.reload();
+  };
+
+  const handleChange = (value: string) => {
+    console.log(`selected ${value}`);
   };
 
   return (
@@ -84,15 +88,29 @@ const AdminLayout: FC<AdminLayoutProps> = ({ children }) => {
               height: 64,
             }}
           />
-          <Button
-            onClick={handleLogOut}
-            className="me-5 font-medium"
-            size="large"
-            type="default"
-            danger
-          >
-            Log Out
-          </Button>
+
+          <Space wrap>
+            <Select
+              defaultValue="Upcoming..."
+              style={{ width: 120, height: 40 }}
+              onChange={handleChange}
+              options={[
+                { value: "GP01", label: "GP01", disabled: true },
+                { value: "GP02", label: "GP02", disabled: true },
+                { value: "GP03", label: "GP03", disabled: true },
+              ]}
+            />
+
+            <Button
+              onClick={handleLogOut}
+              className="mx-5 font-medium"
+              size="large"
+              type="default"
+              danger
+            >
+              Log Out
+            </Button>
+          </Space>
         </Header>
         <Content
           style={{

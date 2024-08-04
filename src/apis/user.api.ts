@@ -35,17 +35,17 @@ export const userApi = {
     }
   },
 
-  getListUser: async (payload: { page: number; pageSize?: number }) => {
+  getListUser: async (payload: { page: number; }) => {
     try {
       const params = {
         MaNhom: GROUP_CODE,
         soTrang: payload.page,
-        soPhanTuTrenTrang: payload.pageSize || PAGE_SIZE,
+        soPhanTuTrenTrang: PAGE_SIZE,
       };
       const response = await fetcher.get<ApiResponse<DataListUser>>(
         `QuanLyNguoiDung/LayDanhSachNguoiDungPhanTrang?MaNhom=${GROUP_CODE}&soTrang=${
           payload.page
-        }&soPhanTuTrenTrang=${payload.pageSize || PAGE_SIZE}`,
+        }&soPhanTuTrenTrang=${PAGE_SIZE}`,
         {
           params
         }
