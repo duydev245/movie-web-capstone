@@ -37,18 +37,21 @@ export const userApi = {
 
   getListUser: async (payload: { page: number; }) => {
     try {
-      const params = {
-        MaNhom: GROUP_CODE,
-        soTrang: payload.page,
-        soPhanTuTrenTrang: PAGE_SIZE,
-      };
       const response = await fetcher.get<ApiResponse<DataListUser>>(
-        `QuanLyNguoiDung/LayDanhSachNguoiDungPhanTrang?MaNhom=${GROUP_CODE}&soTrang=${
+        `QuanLyNguoiDung/LayDanhSachNguoiDungPhanTrang?MaNhom=GP00&soTrang=${
           payload.page
-        }&soPhanTuTrenTrang=${PAGE_SIZE}`,
-        {
-          params
-        }
+        }&soPhanTuTrenTrang=${PAGE_SIZE}`
+      );
+      return response.data.content;
+    } catch (error: any) {
+      throw Error(error.response.data.content);
+    }
+  },
+
+  deleteUser: async (idUser: string) => {
+    try {
+      const response = await fetcher.delete(
+        `/QuanLyNguoiDung/XoaNguoiDung?TaiKhoan=${idUser}`
       );
       return response.data.content;
     } catch (error: any) {

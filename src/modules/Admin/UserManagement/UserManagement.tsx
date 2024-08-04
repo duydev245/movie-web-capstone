@@ -1,5 +1,5 @@
-import { useQuery } from "@tanstack/react-query";
-import { Breadcrumb, Button, Pagination, Table, Tag } from "antd";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { Breadcrumb, Button, message, Pagination, Popconfirm, Table, Tag } from "antd";
 import { useState } from "react";
 import { userApi } from "../../../apis/user.api";
 import { USER_TYPES_MAPPING } from "../../../constants";
@@ -7,15 +7,43 @@ import { UserItem } from "../../../interfaces/user.interface";
 
 const UserManagement = () => {
   const [currentPage, setCurrentPage] = useState(1);
+  const [messageApi, contextHolder] = message.useMessage();
+  const queryClient = useQueryClient();
+
+
 
   const { data, isLoading, error } = useQuery({
     queryKey: ["list-user", { currentPage }],
     queryFn: () => userApi.getListUser({ page: currentPage }),
   });
 
+  // delete user 
+  const { mutate: handleDeleteUserApi, isPending: isDeleting } = useMutation({
+    mutationFn: (idUser: string) => userApi.deleteUser(idUser),
+    onSuccess: () => {
+      messageApi.open({
+        content: "Xóa user thành công",
+        type: "success",
+        duration: 3,
+      });
+      queryClient.refetchQueries({
+        queryKey: ["list-user", { currentPage }],
+        type: "active",
+      });
+    },
+    onError: (error: any) => {
+      console.log("🚀 ~ UserManagement ~ error:", error)
+      messageApi.open({
+        content: error?.message,
+        type: "error",
+        duration: 3,
+      });
+    },
+  });
+
   const columns = [
     {
-      title: "Account",
+      title: "Account ID",
       key: "user-account",
       dataIndex: "taiKhoan",
     },
@@ -55,13 +83,19 @@ const UserManagement = () => {
             >
               Edit
             </Button>
-            <Button
-              type="primary"
-              danger
-              onClick={() => alert(record.taiKhoan)}
+            <Popconfirm
+              title="Delete user"
+              description="Are you sure to delete this user?"
+              onConfirm={() => handleDeleteUserApi(record.taiKhoan)}
+              onCancel={() => {}}
+              placement="left"
+              okText="Yes"
+              cancelText="No"
             >
-              Delete
-            </Button>
+              <Button type="primary" danger disabled={isDeleting}>
+                Delete
+              </Button>
+            </Popconfirm>
           </div>
         );
       },
@@ -77,6 +111,7 @@ const UserManagement = () => {
 
   return (
     <div>
+      {contextHolder}
       <div className="flex items-center justify-between">
         <Breadcrumb
           separator=">"

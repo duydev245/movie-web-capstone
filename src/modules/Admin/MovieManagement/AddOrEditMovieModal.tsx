@@ -89,10 +89,13 @@ const AddOrEditMovieModal: FC<AddOrEditMovieModalProps> = ({
     resolver: yupResolver(schema as any),
     criteriaMode: "all",    
   });
-
+  
+  console.log("🚀 ~ errors:", errors)
   const [imageUpload, setImageUpload] = useState("");
+  console.log("🚀 ~ imageUpload:", imageUpload)
 
   const watchHinhAnh = watch("hinhAnh");
+  console.log("🚀 ~ watchHinhAnh:", watchHinhAnh)
   const statusMovie = watch("trangThai");
 
   const disabledDate: RangePickerProps["disabledDate"] = (current) => {
