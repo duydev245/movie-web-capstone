@@ -5,10 +5,10 @@ export interface UserLoginRequest {
 export interface UserRegisterRequest {
   taiKhoan: string;
   matKhau: string;
-  email: string,
+  email: string;
   maNhom: string;
-  soDt: string,
-  hoTen: string
+  soDt: string;
+  hoTen: string;
 }
 
 export interface CurrentUser {

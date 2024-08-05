@@ -1,14 +1,15 @@
-import { Navigate, Outlet, useRoutes } from 'react-router-dom';
-import { AdminLayout } from '../layouts/AdminLayout';
-import { AuthLayout } from '../layouts/AuthLayout';
-import { AccountSettings } from "../modules/Admin/AccountSettings";
+import { Navigate, Outlet, useRoutes } from "react-router-dom";
+import { AdminLayout } from "../layouts/AdminLayout";
+import { AuthLayout } from "../layouts/AuthLayout";
 import { CinemaManagement } from "../modules/Admin/CinemaManagement";
 import { MovieManagement } from "../modules/Admin/MovieManagement";
-import { UserManagement } from '../modules/Admin/UserManagement';
-import { LoginPage } from '../modules/Auth/Login';
-import { RegisterPage } from '../modules/Auth/Register';
-import { useAppSelector } from '../redux/hooks';
-import { PATH } from './path';
+import { UserManagement } from "../modules/Admin/UserManagement";
+import { LoginPage } from "../modules/Auth/Login";
+import { RegisterPage } from "../modules/Auth/Register";
+import { useAppSelector } from "../redux/hooks";
+import { PATH } from "./path";
+import { ShowTime } from "../modules/Admin/ShowTime";
+import { AccountSettings } from "../modules/Admin/AccountSettings";
 
 const RejectedRouter = () => {
   const { currentUser } = useAppSelector((state) => state.user);
@@ -17,7 +18,11 @@ const RejectedRouter = () => {
     return <Outlet />;
   }
 
-  return currentUser.maLoaiNguoiDung === 'QuanTri' ? <Navigate to={PATH.ADMIN} /> : <Navigate to={PATH.HOME} />;
+  return currentUser.maLoaiNguoiDung === "QuanTri" ? (
+    <Navigate to={PATH.ADMIN} />
+  ) : (
+    <Navigate to={PATH.HOME} />
+  );
 };
 
 const ProtectedRouter = () => {
@@ -27,13 +32,17 @@ const ProtectedRouter = () => {
     return <Navigate to={PATH.LOGIN} />;
   }
 
-  return currentUser.maLoaiNguoiDung === 'QuanTri' ? <Outlet /> : <Navigate to={PATH.HOME} />;
+  return currentUser.maLoaiNguoiDung === "QuanTri" ? (
+    <Outlet />
+  ) : (
+    <Navigate to={PATH.HOME} />
+  );
 };
 
 const useRouteElement = () => {
   const routes = useRoutes([
     {
-      path: 'auth',
+      path: "auth",
       element: <RejectedRouter />,
       children: [
         {
@@ -83,6 +92,14 @@ const useRouteElement = () => {
           element: (
             <AdminLayout>
               <CinemaManagement />
+            </AdminLayout>
+          ),
+        },
+        {
+          path: PATH.ADMIN_SHOWTIME,
+          element: (
+            <AdminLayout>
+              <ShowTime />
             </AdminLayout>
           ),
         },

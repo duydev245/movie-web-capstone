@@ -1,4 +1,4 @@
-import { getLocalStorage } from './../utils/index';
+import { getLocalStorage } from "./../utils/index";
 import axios from "axios";
 import { BASE_URL, TOKEN_CYBERSOFT } from "../constants/urlConfig";
 import { CurrentUser } from "../interfaces/user.interface";

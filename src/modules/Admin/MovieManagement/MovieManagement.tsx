@@ -1,4 +1,10 @@
-import { ClockCircleOutlined, SyncOutlined } from "@ant-design/icons";
+import {
+  ClockCircleOutlined,
+  SyncOutlined,
+  DeleteOutlined,
+  EditOutlined,
+  VideoCameraAddOutlined,
+} from "@ant-design/icons";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   Breadcrumb,
@@ -19,6 +25,7 @@ import { useOpenModal } from "../../../hooks/useOpenModal";
 import { MovieItem } from "../../../interfaces/movie.interface";
 import AddOrEditMovieModal, { FormValues } from "./AddOrEditMovieModal";
 import { GROUP_CODE } from "../../../constants";
+// import dayjs from "dayjs";
 
 const MovieManagement = () => {
   const [currentPage, setCurrentPage] = useState(1);
@@ -110,7 +117,7 @@ const MovieManagement = () => {
       title: "Movie name",
       key: "movie-name",
       dataIndex: "tenPhim",
-      width: 100,
+      width: 150,
     },
     {
       title: "Image",
@@ -120,7 +127,7 @@ const MovieManagement = () => {
           <img
             src={record.hinhAnh}
             alt={record.biDanh}
-            className="w-[100px] h-[120px] rounded-sm object-cover"
+            className="w-[120px] h-[140px] rounded-sm object-cover"
           />
         );
       },
@@ -212,7 +219,7 @@ const MovieManagement = () => {
               }}
               loading={isUpdating}
             >
-              Edit
+              <EditOutlined />
             </Button>
             <Popconfirm
               title="Delete the movie"
@@ -224,7 +231,7 @@ const MovieManagement = () => {
               cancelText="No"
             >
               <Button type="primary" danger disabled={isDeleting}>
-                Delete
+                <DeleteOutlined />
               </Button>
             </Popconfirm>
           </div>
@@ -242,20 +249,14 @@ const MovieManagement = () => {
     formData.append("trailer", formValues.trailer);
     formData.append("danhGia", formValues.danhGia);
     formData.append("moTa", formValues.moTa);
-
-    if (formValues.hinhAnh) {
-      formData.append("hinhAnh", formValues.hinhAnh);
-    }
-
+    formData.append("hinhAnh", formValues.hinhAnh);
     formData.append("hot", formValues.hot.toString());
     formData.append("dangChieu", formValues.trangThai ? "true" : "false");
     formData.append("sapChieu", formValues.trangThai ? "false" : "true");
-    if (formValues.ngayKhoiChieu) {
-      formData.append(
-        "ngayKhoiChieu",
-        format(new Date(formValues.ngayKhoiChieu), "dd/MM/yyyy")
-      );
-    }
+    formData.append(
+      "ngayKhoiChieu",
+      format(new Date(formValues.ngayKhoiChieu), "DD/MM/YYYY")
+    );
     formData.append("maNhom", GROUP_CODE);
 
     if (dataEdit) {
@@ -295,11 +296,11 @@ const MovieManagement = () => {
             openModal();
           }}
         >
-          Add Movie
+          <VideoCameraAddOutlined />
         </Button>
       </div>
 
-      <h3 className="font-medium text-2xl mb-3">List movies</h3>
+      <h3 className="font-medium text-3xl mb-3">List Movie</h3>
 
       <Table
         rowKey="maPhim"

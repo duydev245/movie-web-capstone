@@ -5,6 +5,7 @@ import {
   UserOutlined,
   VideoCameraOutlined,
   SettingOutlined,
+  BankOutlined,
 } from "@ant-design/icons";
 import { Button, Layout, Menu, Select, Space, theme } from "antd";
 import React, { FC, useState } from "react";
@@ -61,8 +62,13 @@ const AdminLayout: FC<AdminLayoutProps> = ({ children }) => {
             },
             {
               key: PATH.ADMIN_CINEMA,
-              icon: <UploadOutlined />,
+              icon: <BankOutlined />,
               label: "Cinema Management",
+            },
+            {
+              key: PATH.ADMIN_SHOWTIME,
+              icon: <UploadOutlined />,
+              label: "Show Time",
             },
             {
               key: PATH.ADMIN_ACCOUNT_SETTINGS,

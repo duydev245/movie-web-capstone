@@ -23,14 +23,15 @@ import { yupResolver } from "@hookform/resolvers/yup";
 type RangePickerProps = GetProps<typeof DatePicker.RangePicker>;
 
 export interface FormValues {
+  maPhim: string;
   tenPhim: string;
   trailer: string;
   moTa: string;
   trangThai: boolean;
   hot: boolean;
   danhGia: string;
-  ngayKhoiChieu: Date | null;
-  hinhAnh: File | null;
+  ngayKhoiChieu: string | null;
+  hinhAnh: any;
 }
 
 interface AddOrEditMovieModalProps {
@@ -49,6 +50,7 @@ const AddOrEditMovieModal: FC<AddOrEditMovieModalProps> = ({
   onSubmit,
 }) => {
   const schema = yup.object({
+    maPhim: yup.string().optional(),
     tenPhim: yup
       .string()
       .trim()
@@ -56,10 +58,10 @@ const AddOrEditMovieModal: FC<AddOrEditMovieModalProps> = ({
     trailer: yup.string().trim().required("* Trailer không được bỏ trống ! "),
     moTa: yup.string().trim().required("* Description không được bỏ trống ! "),
     danhGia: yup.string().trim().required("* Rate không được bỏ trống ! "),
-    trangThai: yup.boolean().required(),
-    hot: yup.boolean().required(),
+    trangThai: yup.boolean().optional(),
+    hot: yup.boolean().optional(),
     ngayKhoiChieu: yup
-      .date()
+      .string()
       .nullable()
       .required("* Release date không được bỏ trống ! "),
     hinhAnh: yup
@@ -84,18 +86,17 @@ const AddOrEditMovieModal: FC<AddOrEditMovieModalProps> = ({
       hot: false,
       danhGia: "",
       ngayKhoiChieu: null,
-      hinhAnh: null,
+      hinhAnh: undefined,
     },
     resolver: yupResolver(schema as any),
-    criteriaMode: "all",    
+    criteriaMode: "all",
   });
-  
-  console.log("🚀 ~ errors:", errors)
+
   const [imageUpload, setImageUpload] = useState("");
-  console.log("🚀 ~ imageUpload:", imageUpload)
+  console.log("🚀 ~ imageUpload:", imageUpload);
 
   const watchHinhAnh = watch("hinhAnh");
-  console.log("🚀 ~ watchHinhAnh:", watchHinhAnh)
+  console.log("🚀 ~ watchHinhAnh:", watchHinhAnh);
   const statusMovie = watch("trangThai");
 
   const disabledDate: RangePickerProps["disabledDate"] = (current) => {
@@ -104,6 +105,7 @@ const AddOrEditMovieModal: FC<AddOrEditMovieModalProps> = ({
 
   useEffect(() => {
     if (dataEdit) {
+      setValue("maPhim", dataEdit.maPhim.toString());
       setValue("tenPhim", dataEdit.tenPhim);
       setValue("trailer", dataEdit.trailer);
       setValue("moTa", dataEdit.moTa);
@@ -113,12 +115,12 @@ const AddOrEditMovieModal: FC<AddOrEditMovieModalProps> = ({
       setValue(
         "ngayKhoiChieu",
         dataEdit.ngayKhoiChieu
-          ? dayjs(new Date(dataEdit.ngayKhoiChieu)).toDate()
+          ? dayjs(new Date(dataEdit.ngayKhoiChieu)).format("YYYY-MM-DD")
           : null
       );
       setImageUpload(dataEdit.hinhAnh);
     }
-  }, [dataEdit]);
+  }, [dataEdit, setValue]);
 
   useEffect(() => {
     if (!isOpen) {
@@ -126,6 +128,12 @@ const AddOrEditMovieModal: FC<AddOrEditMovieModalProps> = ({
     }
   }, []);
 
+  const getErrorMessage = (error: any): string | undefined => {
+    if (!error) return undefined;
+    if (typeof error === "string") return error;
+    if ("message" in error) return error.message;
+    return undefined;
+  };
   return (
     <Modal
       open={isOpen}
@@ -138,6 +146,7 @@ const AddOrEditMovieModal: FC<AddOrEditMovieModalProps> = ({
       onCancel={() => {
         onCloseModal();
         dataEdit?.hinhAnh && setImageUpload(dataEdit.hinhAnh);
+        // window.location.reload();
       }}
       footer={false}
       width={700}
@@ -270,7 +279,7 @@ const AddOrEditMovieModal: FC<AddOrEditMovieModalProps> = ({
             {errors.ngayKhoiChieu && (
               <span className="mt-1 text-sm text-red-500">
                 {" "}
-                {errors.ngayKhoiChieu.message}
+                {getErrorMessage(errors.ngayKhoiChieu)}
               </span>
             )}
             <Controller
@@ -282,11 +291,11 @@ const AddOrEditMovieModal: FC<AddOrEditMovieModalProps> = ({
                   size="large"
                   className="mt-1 w-full"
                   placeholder="DD/MM/YYYY"
-                  format={"DD/MM/YYYY"}
+                  format={"YYYY-MM-DD"}
                   disabledDate={!statusMovie ? disabledDate : undefined}
                   value={field.value ? dayjs(field.value) : null}
                   onChange={(date) =>
-                    field.onChange(date ? date.toDate() : null)
+                    field.onChange(date ? date.format("YYYY-MM-DD") : null)
                   }
                 />
               )}
@@ -296,7 +305,7 @@ const AddOrEditMovieModal: FC<AddOrEditMovieModalProps> = ({
             {errors.hinhAnh && (
               <span className="mt-1 text-sm text-red-500">
                 {" "}
-                {errors.hinhAnh.message}
+                {getErrorMessage(errors.hinhAnh)}
               </span>
             )}
             <Controller
@@ -339,7 +348,7 @@ const AddOrEditMovieModal: FC<AddOrEditMovieModalProps> = ({
                             className="absolute top-1 right-1 cursor-pointer text-red-500 text-base"
                             onClick={(event) => {
                               event.stopPropagation();
-                              setValue("hinhAnh", null);
+                              setValue("hinhAnh", undefined);
                               setImageUpload("");
                             }}
                           >
@@ -365,6 +374,7 @@ const AddOrEditMovieModal: FC<AddOrEditMovieModalProps> = ({
               onClick={() => {
                 onCloseModal();
                 dataEdit?.hinhAnh && setImageUpload(dataEdit.hinhAnh);
+                // window.location.reload();
               }}
             >
               Cancel

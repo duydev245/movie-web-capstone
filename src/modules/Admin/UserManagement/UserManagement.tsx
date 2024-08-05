@@ -1,23 +1,88 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { Breadcrumb, Button, message, Pagination, Popconfirm, Table, Tag } from "antd";
+import {
+  Breadcrumb,
+  Button,
+  message,
+  Pagination,
+  Popconfirm,
+  Table,
+  Tag,
+} from "antd";
+import { DeleteOutlined, EditOutlined, UserAddOutlined } from "@ant-design/icons";
 import { useState } from "react";
 import { userApi } from "../../../apis/user.api";
-import { USER_TYPES_MAPPING } from "../../../constants";
+import { GROUP_CODE, USER_TYPES_MAPPING } from "../../../constants";
 import { UserItem } from "../../../interfaces/user.interface";
+import { useOpenModal } from "../../../hooks/useOpenModal";
+import AddOrEditUserModal, { FormValues } from "./AddOrEditUserModal";
 
 const UserManagement = () => {
   const [currentPage, setCurrentPage] = useState(1);
+  const [dataEdit, setDataEdit] = useState<UserItem | undefined>(undefined);
+
   const [messageApi, contextHolder] = message.useMessage();
   const queryClient = useQueryClient();
 
-
+  const { isOpen, openModal, closeModal } = useOpenModal();
 
   const { data, isLoading, error } = useQuery({
     queryKey: ["list-user", { currentPage }],
     queryFn: () => userApi.getListUser({ page: currentPage }),
   });
 
-  // delete user 
+  // Add user
+  const { mutate: handleAddUserApi, isPending: isCreating } = useMutation({
+    mutationFn: (payload: FormData) => userApi.addUser(payload),
+    onSuccess: (data) => {
+      console.log("🚀 ~ UserManagement ~ data:", data);
+      messageApi.open({
+        content: "Thêm user thành công",
+        type: "success",
+        duration: 3,
+      });
+      closeModal();
+      queryClient.refetchQueries({
+        queryKey: ["list-user", { currentPage }],
+        type: "active",
+      });
+    },
+    onError: (error: any) => {
+      console.log("🚀 ~ UserManagement ~ error:", error?.message);
+      messageApi.open({
+        content: error?.message,
+        type: "error",
+        duration: 3,
+      });
+    },
+  });
+
+  // Update User
+  const { mutate: handleUpdateUserApi, isPending: isUpdating } = useMutation({
+    mutationFn: (payload: FormData) => userApi.updateUser(payload),
+    onSuccess: (data) => {
+      console.log("🚀 ~ UserManagement ~ data:", data);
+      messageApi.open({
+        content: "Update user thành công",
+        type: "success",
+        duration: 3,
+      });
+      closeModal();
+      queryClient.refetchQueries({
+        queryKey: ["list-user", { currentPage }],
+        type: "active",
+      });
+    },
+    onError: (error: any) => {
+      console.log("🚀 ~ UserManagement ~ error:", error?.message);
+      messageApi.open({
+        content: error?.message,
+        type: "error",
+        duration: 3,
+      });
+    },
+  });
+
+  // Delete user
   const { mutate: handleDeleteUserApi, isPending: isDeleting } = useMutation({
     mutationFn: (idUser: string) => userApi.deleteUser(idUser),
     onSuccess: () => {
@@ -32,7 +97,7 @@ const UserManagement = () => {
       });
     },
     onError: (error: any) => {
-      console.log("🚀 ~ UserManagement ~ error:", error)
+      console.log("🚀 ~ UserManagement ~ error:", error);
       messageApi.open({
         content: error?.message,
         type: "error",
@@ -79,9 +144,13 @@ const UserManagement = () => {
             <Button
               type="primary"
               className="mr-2"
-              onClick={() => alert(record.taiKhoan)}
+              onClick={() => {
+                setDataEdit(record);
+                openModal();
+              }}
+              loading={isUpdating}
             >
-              Edit
+              <EditOutlined />
             </Button>
             <Popconfirm
               title="Delete user"
@@ -93,7 +162,7 @@ const UserManagement = () => {
               cancelText="No"
             >
               <Button type="primary" danger disabled={isDeleting}>
-                Delete
+                <DeleteOutlined />
               </Button>
             </Popconfirm>
           </div>
@@ -105,12 +174,25 @@ const UserManagement = () => {
   const dataSource = data?.items || [];
   const total = data?.totalCount || 0;
 
+  const handleSubmit = (formValues: FormValues) => {
+    const formData = new FormData();
+    formData.append("taiKhoan", formValues.taiKhoan);
+    formData.append("matKhau", formValues.matKhau);
+    formData.append("email", formValues.email);
+    formData.append("soDT", formValues.soDt);
+    formData.append("maNhom", GROUP_CODE);
+    formData.append("maLoaiNguoiDung", formValues.maLoaiNguoiDung);
+    formData.append("hoTen", formValues.hoTen);
+
+    dataEdit ? handleUpdateUserApi(formData) : handleAddUserApi(formData);
+  };
+
   if (!isLoading && error) {
     return <div>Something went wrong</div>;
   }
 
   return (
-    <div>
+    <>
       {contextHolder}
       <div className="flex items-center justify-between">
         <Breadcrumb
@@ -126,8 +208,14 @@ const UserManagement = () => {
           ]}
         />
 
-        <Button size="large" type="primary">
-          Add User
+        <Button
+          size="large"
+          type="primary"
+          onClick={() => {
+            openModal();
+          }}
+        >
+          <UserAddOutlined />
         </Button>
       </div>
 
@@ -149,7 +237,15 @@ const UserManagement = () => {
           showSizeChanger={false}
         />
       </div>
-    </div>
+
+      <AddOrEditUserModal
+        dataEdit={dataEdit}
+        isOpen={isOpen}
+        isPending={isCreating || isUpdating}
+        onCloseModal={closeModal}
+        onSubmit={handleSubmit}
+      />
+    </>
   );
 };
 

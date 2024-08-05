@@ -39,7 +39,9 @@ const Register = () => {
       .string()
       .trim()
       .required("*Số điện thoại không được bỏ trống !")
-      .min(9, "*Số điện thoại phải trên 9 kí tự !"),
+      .matches(/^[0-9]+$/, "*Số điện thoại không được là kí tự !")
+      .min(9, "*Số điện thoại phải trên 9 kí tự !")
+      .max(15, "*Số điện thoại không được quá 15 kí tự !"),
   });
 
   const {

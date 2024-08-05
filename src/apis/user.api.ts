@@ -35,13 +35,37 @@ export const userApi = {
     }
   },
 
-  getListUser: async (payload: { page: number; }) => {
+  getListUser: async (payload: { page: number }) => {
     try {
       const response = await fetcher.get<ApiResponse<DataListUser>>(
-        `QuanLyNguoiDung/LayDanhSachNguoiDungPhanTrang?MaNhom=GP00&soTrang=${
-          payload.page
-        }&soPhanTuTrenTrang=${PAGE_SIZE}`
+        `QuanLyNguoiDung/LayDanhSachNguoiDungPhanTrang?MaNhom=${GROUP_CODE}&soTrang=${payload.page}&soPhanTuTrenTrang=${PAGE_SIZE}`
       );
+      return response.data.content;
+    } catch (error: any) {
+      throw Error(error.response.data.content);
+    }
+  },
+
+  addUser: async (payload: FormData) => {
+    try {
+      const response = await fetcher.post(
+        "/QuanLyNguoiDung/ThemNguoiDung",
+        payload
+      );
+
+      return response.data.content;
+    } catch (error: any) {
+      throw Error(error.response.data.content);
+    }
+  },
+
+  updateUser: async (payload: FormData) => {
+    try {
+      const response = await fetcher.post(
+        "/QuanLyNguoiDung/CapNhatThongTinNguoiDung",
+        payload
+      );
+
       return response.data.content;
     } catch (error: any) {
       throw Error(error.response.data.content);
