@@ -5,11 +5,14 @@ import React, { useEffect, useState } from 'react'
 import { movieApi } from '../../../apis/movie.api';
 import { Content } from 'antd/es/layout/layout';
 import { Button, Card, Col, Divider, Row, Tabs, Typography } from 'antd';
+import { useNavigate } from 'react-router-dom';
 
 const Cinemas = () => {
 
     const [cinemaClick, setCinemaClick] = useState("BHDStar");
     const [cinemaIdClick, setCinemaIdClick] = useState("bhd-star-cineplex-3-2");
+
+    const navigate = useNavigate()
 
     const { data: listCinemasId, isLoading, error } = useQuery({
         queryKey: ['list-cinemas'],
@@ -42,6 +45,10 @@ const Cinemas = () => {
 
     const handleTenHeThongRap = (tenRap: any) => {
         setCinemaIdClick(tenRap)
+    }
+
+    const handleDetailMovie = (maPhim: any) => {
+        navigate(`/movie-details/${maPhim}`)
     }
 
     useEffect(() => {
@@ -102,10 +109,14 @@ const Cinemas = () => {
                                                         return (
                                                             <div key={cinemaId.maCumRap} className='flex grid grid-cols-4 gap-5'>
                                                                 {cinemaId.danhSachPhim.map((phim: any) => {
-                                                                    return (<Card.Grid key={phim.maPhim} onClick={() => { }}>
+                                                                    return (<Card.Grid key={phim.maPhim}>
                                                                         <div className='flex flex-col'>
                                                                             <img className='h-[100px] w-full object-contain' src={phim.hinhAnh} alt="" />
                                                                             <h4 className=' text-center'>{phim.tenPhim}</h4>
+                                                                            <div className=' flex gap-2 justify-center'>
+                                                                                <Button onClick={() => { handleDetailMovie(phim.maPhim) }} type='primary'>Chi tiết</Button>
+                                                                                <Button>Đặt vé</Button>
+                                                                            </div>
                                                                         </div>
                                                                     </Card.Grid>)
                                                                 })}

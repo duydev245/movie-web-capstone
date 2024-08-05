@@ -6,13 +6,20 @@ import { Content } from 'antd/es/layout/layout'
 import React from 'react'
 import { movieApi } from '../../../apis/movie.api';
 import { MovieItem } from '../../../interfaces/movie.interface';
+import { useNavigate } from 'react-router-dom';
 
 const ListMovie = () => {
+
+    const navigate = useNavigate();
 
     const { data, isLoading, error } = useQuery({
         queryKey: ['list-movie'],
         queryFn: () => movieApi.listMovie(),
     });
+
+    const handleDetailMovie = (maPhim: any) => {
+        navigate(`/movie-details/${maPhim}`)
+    }
 
     if (!isLoading && error) {
         return <div>Something went wrong</div>;
@@ -40,9 +47,7 @@ const ListMovie = () => {
                                     {movie.tenPhim}
                                 </Typography>
                                 <div className='flex justify-around'>
-                                    <Button onClick={() => { }} type='primary' className='mt-5 font-medium p-5 w-full'>Chi tiết</Button>
-
-                                    {/* <Button onClick={() => { handleDetailMovie(movie.maPhim) }} type='primary' className='mt-5 font-medium p-5 w-full'>Chi tiết</Button> */}
+                                    <Button onClick={() => { handleDetailMovie(movie.maPhim) }} type='primary' className='mt-5 font-medium p-5 w-full'>Chi tiết</Button>
                                 </div>
                             </Card>
                         </Col>

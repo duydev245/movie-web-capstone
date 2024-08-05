@@ -11,6 +11,9 @@ import { useAppSelector } from '../redux/hooks';
 import { PATH } from './path';
 import { UserLayout } from '../layouts/UserLayout';
 import { HomePage } from '../modules/User/Home';
+import { MovieDetail } from '../modules/User/MovieDetailPage';
+import { BookingTicketPage } from '../modules/User/BookingTicket';
+import { ProfilePage } from '../modules/User/Profile';
 // import { UserLayout } from '../layouts/UserLayout';
 // import { HomePage } from '../modules/User/Home';
 
@@ -112,7 +115,25 @@ const useRouteElement = () => {
             <UserLayout>
               <HomePage />
             </UserLayout>
-        }
+        },
+        //Movie details page
+        {
+          path: PATH.MOVIE_DETAILS,
+          element:
+            <MovieDetail />
+        },
+        //Booking page
+        {
+          path: PATH.BOOKING,
+          element:
+            <BookingTicketPage />
+        },
+        //Profile User
+        {
+          path: PATH.PROFILE,
+          element:
+            <ProfilePage />
+        },
       ]
 
     }

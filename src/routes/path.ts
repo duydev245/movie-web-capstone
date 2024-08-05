@@ -5,8 +5,8 @@ export const PATH = {
   LOGIN: "/auth/login",
   REGISTER: "/auth/register",
   // USER
-  MOVIE_DETAILS: "/movie-details",
-  BOOKING: "/booking",
+  MOVIE_DETAILS: "/movie-details/:id",
+  BOOKING: "/booking/:id",
   PROFILE: "/profile",
   // ADMIN
   ADMIN: "/admin",

@@ -77,5 +77,28 @@ export const movieApi = {
       throw Error(error.response.data.content);
     }
   },
+  movieDetails: async (maPhim: any) => {
+    try {
+      const response = await fetcher.get<ApiResponse<any>>(
+        `/QuanLyRap/LayThongTinLichChieuPhim?MaPhim=${maPhim}`
+      );
+
+      return response.data.content
+    } catch (error: any) {
+      throw Error(error.response.data.content);
+    }
+  },
+  movieBooking: async (maLichChieu: any) => {
+    try {
+      const response = await fetcher.get<ApiResponse<any>>(
+        `/QuanLyDatVe/LayDanhSachPhongVe?MaLichChieu=${maLichChieu}`
+      );
+
+      return response.data.content
+    } catch (error: any) {
+      throw Error(error.response.data.content);
+    }
+  },
+
 
 };
