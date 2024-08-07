@@ -303,6 +303,7 @@ const AccountSettings = () => {
               render={({ field }) => (
                 <Select
                   {...field}
+                  disabled={true}
                   defaultValue="Khách Hàng"
                   className="mt-1"
                   style={{ width: `100%`, height: 45, display: "block" }}

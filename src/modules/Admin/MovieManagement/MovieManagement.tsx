@@ -4,6 +4,7 @@ import {
   DeleteOutlined,
   EditOutlined,
   VideoCameraAddOutlined,
+  UploadOutlined,
 } from "@ant-design/icons";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
@@ -244,10 +245,19 @@ const MovieManagement = () => {
               okText="Yes"
               cancelText="No"
             >
-              <Button type="primary" danger disabled={isDeleting}>
+              <Button className="mr-2" type="primary" danger disabled={isDeleting}>
                 <DeleteOutlined />
               </Button>
             </Popconfirm>
+
+            <Button
+              type="primary"
+              onClick={() => {
+                alert(record.maPhim + ' --- upcomming feature!');
+              }}
+            >
+              <UploadOutlined />
+            </Button>
           </div>
         );
       },
