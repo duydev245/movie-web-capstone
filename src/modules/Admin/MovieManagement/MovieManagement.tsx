@@ -25,12 +25,15 @@ import { useOpenModal } from "../../../hooks/useOpenModal";
 import { MovieItem } from "../../../interfaces/movie.interface";
 import AddOrEditMovieModal, { FormValues } from "./AddOrEditMovieModal";
 import { GROUP_CODE } from "../../../constants";
+
 // import dayjs from "dayjs";
 
 const MovieManagement = () => {
   const [currentPage, setCurrentPage] = useState(1);
-  const [dataEdit, setDataEdit] = useState<MovieItem | undefined>(undefined);
+  const [dataEdit, setDataEdit] = useState<MovieItem>();
+  // Modal
   const { isOpen, openModal, closeModal } = useOpenModal();
+
   const queryClient = useQueryClient();
 
   const { data, isLoading, error } = useListMovies(currentPage);
@@ -113,12 +116,14 @@ const MovieManagement = () => {
   });
 
   const columns = [
+    // Movie name
     {
       title: "Movie name",
       key: "movie-name",
       dataIndex: "tenPhim",
       width: 150,
     },
+    // Image
     {
       title: "Image",
       key: "image",
@@ -132,6 +137,7 @@ const MovieManagement = () => {
         );
       },
     },
+    // Description
     {
       title: "Description",
       key: "description",
@@ -148,14 +154,16 @@ const MovieManagement = () => {
         );
       },
     },
+    // Show time
     {
       title: "Show time",
       key: "show-time",
       dataIndex: "ngayKhoiChieu",
       render: (date: string) => {
-        return <Typography>{format(date, "dd/MM/yyyy")}</Typography>;
+        return <Typography>{format(date, "yyy/MM/dd")}</Typography>;
       },
     },
+    // Rate
     {
       title: "Rate",
       key: "rate",
@@ -164,6 +172,7 @@ const MovieManagement = () => {
         return <Rate disabled allowHalf value={(rate || 0) / 2} count={5} />;
       },
     },
+    // Hot
     {
       title: "Hot",
       key: "hot",
@@ -176,6 +185,7 @@ const MovieManagement = () => {
         );
       },
     },
+    // Showing
     {
       title: "Showing",
       key: "dangChieu",
@@ -190,6 +200,7 @@ const MovieManagement = () => {
         );
       },
     },
+    // Coming soon
     {
       title: "Coming soon",
       key: "sapChieu",
@@ -204,12 +215,14 @@ const MovieManagement = () => {
         );
       },
     },
+    // Action
     {
       title: "Action",
       key: "action",
       render: (record: any) => {
         return (
           <div className="flex">
+            {/* {edit} */}
             <Button
               type="primary"
               className="mr-2"
@@ -221,6 +234,7 @@ const MovieManagement = () => {
             >
               <EditOutlined />
             </Button>
+            {/* {delete} */}
             <Popconfirm
               title="Delete the movie"
               description="Are you sure to delete this movie?"
@@ -253,10 +267,7 @@ const MovieManagement = () => {
     formData.append("hot", formValues.hot.toString());
     formData.append("dangChieu", formValues.trangThai ? "true" : "false");
     formData.append("sapChieu", formValues.trangThai ? "false" : "true");
-    formData.append(
-      "ngayKhoiChieu",
-      format(new Date(formValues.ngayKhoiChieu), "DD/MM/YYYY")
-    );
+    formData.append("ngayKhoiChieu", formValues.ngayKhoiChieu);
     formData.append("maNhom", GROUP_CODE);
 
     if (dataEdit) {
@@ -328,6 +339,16 @@ const MovieManagement = () => {
         onCloseModal={closeModal}
         onSubmit={handleSubmit}
       />
+
+      {/* <MoaalMovieCreate isOpen={isOpen} onCloseModal={closeModal} onSubmit={handleSubmit} isPending={isCreating}/> */}
+
+      {/* {dataEdit && (
+        <MoaalMovieEdit
+          dataEdit={dataEdit}
+          isOpen={isOpenEdit}
+          onCloseModal={closeModalEdit}
+        />
+      )} */}
     </>
   );
 };

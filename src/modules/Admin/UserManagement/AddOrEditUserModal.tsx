@@ -87,13 +87,13 @@ const AddOrEditUserModal: FC<AddOrEditUserModalProps> = ({
       setValue("soDt", dataEdit.soDt);
       setValue("maLoaiNguoiDung", dataEdit.maLoaiNguoiDung);
     }
-  }, [dataEdit]);
+  }, [dataEdit, setValue]);
 
   useEffect(() => {
     if (!isOpen) {
       reset();
     }
-  }, [isOpen, reset]);
+  }, []);
 
   return (
     <Modal
@@ -130,6 +130,7 @@ const AddOrEditUserModal: FC<AddOrEditUserModalProps> = ({
                   size="large"
                   className="mt-1"
                   placeholder="Vui lòng nhập tài khoản..."
+                  disabled={!!dataEdit}
                 />
               )}
             />
@@ -154,6 +155,7 @@ const AddOrEditUserModal: FC<AddOrEditUserModalProps> = ({
                   type="password"
                   size="large"
                   className="mt-1"
+                  disabled  
                   placeholder="Vui lòng nhập mật khẩu..."
                 />
               )}

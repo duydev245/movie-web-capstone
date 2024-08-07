@@ -93,15 +93,17 @@ const AddOrEditMovieModal: FC<AddOrEditMovieModalProps> = ({
   });
 
   const [imageUpload, setImageUpload] = useState("");
-  console.log("🚀 ~ imageUpload:", imageUpload);
 
   const watchHinhAnh = watch("hinhAnh");
-  console.log("🚀 ~ watchHinhAnh:", watchHinhAnh);
   const statusMovie = watch("trangThai");
 
   const disabledDate: RangePickerProps["disabledDate"] = (current) => {
     return current && current < dayjs().endOf("day");
   };
+
+  useEffect(() => {
+    setValue("hinhAnh", imageUpload);
+  }, [imageUpload])
 
   useEffect(() => {
     if (dataEdit) {
@@ -290,7 +292,7 @@ const AddOrEditMovieModal: FC<AddOrEditMovieModalProps> = ({
                   {...field}
                   size="large"
                   className="mt-1 w-full"
-                  placeholder="DD/MM/YYYY"
+                  placeholder="YYYY-MM-DD"
                   format={"YYYY-MM-DD"}
                   disabledDate={!statusMovie ? disabledDate : undefined}
                   value={field.value ? dayjs(field.value) : null}

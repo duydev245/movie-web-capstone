@@ -3,6 +3,7 @@ import { ApiResponse } from "../interfaces";
 import {
   CurrentUser,
   DataListUser,
+  UserItem,
   UserLoginRequest,
   UserRegisterRequest,
 } from "./../interfaces/user.interface";
@@ -39,6 +40,17 @@ export const userApi = {
     try {
       const response = await fetcher.get<ApiResponse<DataListUser>>(
         `QuanLyNguoiDung/LayDanhSachNguoiDungPhanTrang?MaNhom=${GROUP_CODE}&soTrang=${payload.page}&soPhanTuTrenTrang=${PAGE_SIZE}`
+      );
+      return response.data.content;
+    } catch (error: any) {
+      throw Error(error.response.data.content);
+    }
+  },
+
+  getInfoUser: async (maNhom: string, taiKhoan: string) => {
+    try {
+      const response = await fetcher.get<ApiResponse<UserItem>>(
+        `/QuanLyNguoiDung/LayDanhSachNguoiDung?MaNhom=${maNhom}&tuKhoa=${taiKhoan}`
       );
       return response.data.content;
     } catch (error: any) {

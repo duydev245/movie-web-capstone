@@ -14,7 +14,7 @@ export interface MovieItem {
   hinhAnh: string;
   moTa: string;
   maNhom: string;
-  ngayKhoiChieu: Date;
+  ngayKhoiChieu: string;
   danhGia: number;
   hot: boolean;
   dangChieu: boolean;

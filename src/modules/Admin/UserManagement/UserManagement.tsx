@@ -8,7 +8,11 @@ import {
   Table,
   Tag,
 } from "antd";
-import { DeleteOutlined, EditOutlined, UserAddOutlined } from "@ant-design/icons";
+import {
+  DeleteOutlined,
+  EditOutlined,
+  UserAddOutlined,
+} from "@ant-design/icons";
 import { useState } from "react";
 import { userApi } from "../../../apis/user.api";
 import { GROUP_CODE, USER_TYPES_MAPPING } from "../../../constants";
@@ -212,6 +216,7 @@ const UserManagement = () => {
           size="large"
           type="primary"
           onClick={() => {
+            setDataEdit(undefined);
             openModal();
           }}
         >
@@ -239,6 +244,7 @@ const UserManagement = () => {
       </div>
 
       <AddOrEditUserModal
+        key={dataEdit ? "edit" : "add"}
         dataEdit={dataEdit}
         isOpen={isOpen}
         isPending={isCreating || isUpdating}
