@@ -1,4 +1,5 @@
 import { Col, Form, Input, message, Row, Typography } from "antd";
+import { EyeInvisibleOutlined, EyeTwoTone } from "@ant-design/icons";
 import { Controller, useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -12,6 +13,7 @@ import { GROUP_CODE } from "../../../constants";
 interface FormValues {
   username: string;
   password: string;
+  confirmPassword: string;
   fullname: string;
   mail: string;
   phone: string;
@@ -29,6 +31,12 @@ const Register = () => {
       .trim()
       .required("*Mật khẩu không được bỏ trống !")
       .min(5, "*Mật khẩu phải trên 5 kí tự !"),
+    confirmPassword: yup
+    .string()
+    .trim()
+    .notRequired()
+    .required("*Xác Nhận mật khẩu không được bỏ trống !")
+    .oneOf([yup.ref("password")], "Xác Nhận Mật Khẩu Sai"),
     fullname: yup.string().trim().required("*Họ và tên không được bỏ trống !"),
     mail: yup
       .string()
@@ -52,6 +60,7 @@ const Register = () => {
     defaultValues: {
       username: "",
       password: "",
+      confirmPassword: "",
       fullname: "",
       mail: "",
       phone: "",
@@ -107,6 +116,7 @@ const Register = () => {
       <Form
         layout="vertical"
         className="overflow-visible"
+        style={{ maxHeight: `100vh` }}
         onFinish={handleSubmit(onSubmit)}
       >
         <Row gutter={[24, 10]}>
@@ -152,12 +162,43 @@ const Register = () => {
               control={control}
               render={({ field }) => {
                 return (
-                  <Input
+                  <Input.Password
                     {...field}
-                    type="password"
                     size="large"
                     className="mt-1"
                     placeholder="Vui lòng nhập mật khẩu..."
+                    iconRender={(visible) =>
+                      visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
+                    }
+                  />
+                );
+              }}
+            />
+          </Col>
+
+          <Col span={24}>
+            <label className="text-base text-white">*Xác nhận mật khẩu:</label>
+            {errors?.confirmPassword && (
+              <>
+                {" "}
+                <span className="mt-1 text-sm text-red-500">
+                  {errors.confirmPassword.message}
+                </span>
+              </>
+            )}
+            <Controller
+              name="confirmPassword"
+              control={control}
+              render={({ field }) => {
+                return (
+                  <Input.Password
+                    {...field}
+                    size="large"
+                    className="mt-1"
+                    placeholder="Vui lòng nhập mật khẩu..."
+                    iconRender={(visible) =>
+                      visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
+                    }
                   />
                 );
               }}
