@@ -96,3 +96,28 @@
 .button2:hover {
   background-color: rgb(0, 138, 0);
 }
+
+/* User */
+
+.righttoleft {
+  font-size: 11px;
+  white-space: nowrap;
+  display: block;
+  width: 100%;
+  position: relative;
+  text-align: left;
+}
+
+.righttoleft:hover {
+  animation: marquee 10s linear infinite;
+}
+
+@keyframes marquee {
+  0% {
+    transform: translateX(0);
+  }
+
+  100% {
+    transform: translateX(-100%);
+  }
+}

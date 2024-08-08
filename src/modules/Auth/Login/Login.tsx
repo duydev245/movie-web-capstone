@@ -1,5 +1,6 @@
 import { useMutation } from "@tanstack/react-query";
 import { Button, Col, Form, Input, Row, Typography, message } from "antd";
+import { EyeInvisibleOutlined, EyeTwoTone } from "@ant-design/icons";
 import { Controller, useForm } from "react-hook-form";
 import { userApi } from "../../../apis/user.api";
 import {
@@ -122,12 +123,15 @@ const Login = () => {
               control={control}
               render={({ field }) => {
                 return (
-                  <Input
+                  <Input.Password
                     {...field}
                     type="password"
                     size="large"
                     className="mt-1"
                     placeholder="Vui lòng nhập mật khẩu..."
+                    iconRender={(visible) =>
+                      visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
+                    }
                     status={errors.password ? "error" : ""}
                   />
                 );

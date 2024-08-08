@@ -9,6 +9,11 @@ import { RegisterPage } from "../modules/Auth/Register";
 import { useAppSelector } from "../redux/hooks";
 import { PATH } from "./path";
 import { AccountSettings } from "../modules/Admin/AccountSettings";
+import { HomePage } from "../modules/User/Home";
+import { UserLayout } from "../layouts/UserLayout";
+import { MovieDetail } from "../modules/User/MovieDetailPage";
+import { BookingTicketPage } from "../modules/User/BookingTicket";
+import { ProfilePage } from "../modules/User/Profile";
 
 const RejectedRouter = () => {
   const { currentUser } = useAppSelector((state) => state.user);
@@ -40,6 +45,7 @@ const ProtectedRouter = () => {
 
 const useRouteElement = () => {
   const routes = useRoutes([
+    // Auth
     {
       path: "auth",
       element: <RejectedRouter />,
@@ -62,6 +68,7 @@ const useRouteElement = () => {
         },
       ],
     },
+    // Admin
     {
       path: PATH.ADMIN,
       element: <ProtectedRouter />,
@@ -100,6 +107,44 @@ const useRouteElement = () => {
             <AdminLayout>
               <AccountSettings />
             </AdminLayout>
+          ),
+        },
+      ],
+    },
+    // User
+    {
+      path: "/",
+      children: [
+        //Home
+        {
+          path: PATH.HOME,
+          element: <HomePage />,
+        },
+        //Movie details page
+        {
+          path: PATH.MOVIE_DETAILS,
+          element: (
+            <UserLayout>
+              <MovieDetail />
+            </UserLayout>
+          ),
+        },
+        //Booking page
+        {
+          path: PATH.BOOKING,
+          element: (
+            <UserLayout>
+              <BookingTicketPage />
+            </UserLayout>
+          ),
+        },
+        //Profile User
+        {
+          path: PATH.PROFILE,
+          element: (
+            <UserLayout>
+              <ProfilePage />
+            </UserLayout>
           ),
         },
       ],

@@ -155,7 +155,7 @@ const AddOrEditUserModal: FC<AddOrEditUserModalProps> = ({
                   type="password"
                   size="large"
                   className="mt-1"
-                  disabled  
+                  disabled={!!dataEdit} 
                   placeholder="Vui lòng nhập mật khẩu..."
                 />
               )}
@@ -254,6 +254,7 @@ const AddOrEditUserModal: FC<AddOrEditUserModalProps> = ({
                 <Select
                   {...field}
                   defaultValue="Khách Hàng"
+                  disabled={!!dataEdit} 
                   className="mt-1"
                   style={{ width: `100%`, height: 45, display: "block" }}
                   options={[
