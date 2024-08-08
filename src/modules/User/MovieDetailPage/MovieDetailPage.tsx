@@ -8,7 +8,6 @@ import { movieApi } from "../../../apis/movie.api";
 const MovieDetailPage = () => {
 
   const { id } = useParams();
-  console.log('id: ', id);
 
   const navigate = useNavigate()
 
@@ -19,7 +18,6 @@ const MovieDetailPage = () => {
   });
 
   const handleBookingTickets = (maLichChieu: any) => {
-    console.log('maLichChieu: ', maLichChieu);
 
     navigate(`/booking/${maLichChieu}`)
 

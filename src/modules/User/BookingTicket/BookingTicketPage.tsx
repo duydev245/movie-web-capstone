@@ -156,7 +156,7 @@ const BookingTicketPage = () => {
                                 !chair.daDat && (
                                     <Button key={chair.maGhe} className='w-52 mb-1'>
                                         <p>
-                                            Ghế {chair.tenGhe} giá:
+                                            <span>Ghế {chair.tenGhe} giá: </span>
                                             <span className='text-green-600'>
                                                 {chair.giaVe} $
                                             </span>

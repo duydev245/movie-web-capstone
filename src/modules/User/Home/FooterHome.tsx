@@ -6,7 +6,6 @@ import { useAppSelector } from '../../../redux/hooks'
 
 const FooterHome = () => {
     const data = useAppSelector((state) => state.dataMovie.cinemasId)
-    console.log('data: ', data);
     return (
         <footer className="bg-white rounded-lg shadow dark:bg-gray-900 m-4">
             <div className="w-full max-w-screen-xl mx-auto p-4 md:py-8">
@@ -19,7 +18,7 @@ const FooterHome = () => {
                         <div className='grid grid-cols-3 gap-4 mt-5'>
                             {data?.map((item: any) => {
                                 return (
-                                    <div className=''>
+                                    <div key={item.maHeThongRap} className=''>
                                         <img width={50} src={item.logo} alt="" />
                                     </div>
                                 )
