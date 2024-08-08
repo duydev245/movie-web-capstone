@@ -6,6 +6,11 @@ import { movieApi } from '../../../apis/movie.api';
 import { Content } from 'antd/es/layout/layout';
 import { Button, Card, Col, Divider, Row, Tabs, Typography } from 'antd';
 import { useNavigate } from 'react-router-dom';
+import { Link as Element } from 'react-scroll';
+import { useAppDispatch } from '../../../redux/hooks';
+import { setCinemasId } from '../../../redux/slices/movie.slice';
+
+
 
 const Cinemas = () => {
 
@@ -13,6 +18,7 @@ const Cinemas = () => {
     const [cinemaIdClick, setCinemaIdClick] = useState("bhd-star-cineplex-3-2");
 
     const navigate = useNavigate()
+    const distpatch = useAppDispatch()
 
     const { data: listCinemasId, isLoading, error } = useQuery({
         queryKey: ['list-cinemas'],
@@ -37,6 +43,7 @@ const Cinemas = () => {
                 return movieApi.listMovieByCinemas(cinemaClick)
             }
         },
+        enabled: !!cinemaClick,
     });
 
     const handleMaHeThongRap = (cinemaClick: any) => {
@@ -52,6 +59,10 @@ const Cinemas = () => {
     }
 
     useEffect(() => {
+        distpatch(setCinemasId(listCinemasId))
+    });
+
+    useEffect(() => {
     }, [cinemaClick, cinemaIdClick]);
 
 
@@ -64,15 +75,17 @@ const Cinemas = () => {
     if (!listMovieByCinemas) return ''
 
     return (
-        <Content className='mx-60 mb-36'>
+        <Content className='mx-60 mb-40'>
+            <Element name='cinemas' className="cursor-default">
+                <div style={{ height: 100, maxWidth: 940, margin: 'auto', width: '100%', background: 'url("img/back-news.png") 0% 0% / 100% no-repeat' }} />
+            </Element>
             <Divider orientation="left">
                 <Typography className=' text-3xl'>
                     Danh Sách Phim Theo Rạp
                 </Typography>
             </Divider>
-            <div className=''>
+            <div className='mt-10'>
                 <Tabs
-                    className=''
                     tabPosition={'left'}
                     items={listCinemasId.map((item: any) => {
                         return {
@@ -87,7 +100,7 @@ const Cinemas = () => {
                             children:
                                 (
                                     <Row gutter={24}>
-                                        <Col span={7} className='cursor-pointer block'>
+                                        <Col span={7} className='cursor-pointer block overflow-scroll h-[500px]'>
                                             {listCinemasName.map((cinema: any) => {
                                                 return (
 
@@ -107,7 +120,7 @@ const Cinemas = () => {
                                                 return listcinemas.lstCumRap.map((cinemaId: any) => {
                                                     if (cinemaId.maCumRap === cinemaIdClick) {
                                                         return (
-                                                            <div key={cinemaId.maCumRap} className='flex grid grid-cols-4 gap-5'>
+                                                            <div key={cinemaId.maCumRap} className='flex grid grid-cols-4 gap-5 overflow-scroll h-[500px]'>
                                                                 {cinemaId.danhSachPhim.map((phim: any) => {
                                                                     return (<Card.Grid key={phim.maPhim}>
                                                                         <div className='flex flex-col'>
@@ -115,7 +128,6 @@ const Cinemas = () => {
                                                                             <h4 className=' text-center'>{phim.tenPhim}</h4>
                                                                             <div className=' flex gap-2 justify-center'>
                                                                                 <Button onClick={() => { handleDetailMovie(phim.maPhim) }} type='primary'>Chi tiết</Button>
-                                                                                <Button>Đặt vé</Button>
                                                                             </div>
                                                                         </div>
                                                                     </Card.Grid>)
@@ -127,7 +139,6 @@ const Cinemas = () => {
                                             })}
                                         </Col>
                                     </Row>
-
                                 )
                         };
                     })}

@@ -99,6 +99,4 @@ export const movieApi = {
       throw Error(error.response.data.content);
     }
   },
-
-
 };

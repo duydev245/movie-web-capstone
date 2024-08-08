@@ -2,7 +2,7 @@
 
 import { useQuery } from '@tanstack/react-query'
 import { Carousel } from 'antd'
-import React, { useEffect } from 'react'
+import React from 'react'
 import { movieApi } from '../../../apis/movie.api'
 import { BannerItem } from '../../../interfaces/movie.interface'
 
@@ -21,12 +21,10 @@ const Banner = () => {
 
     return (
         <div>
-
-            <Carousel arrows infinite={false}>
-
+            <Carousel arrows infinite={true} dots={false}>
                 {data.map((item: BannerItem) => {
                     return (
-                        <div key={item.maBanner} onClick={() => { }}>
+                        <div className='mt-[64px]' key={item.maBanner} onClick={() => { }}>
                             <img src={item.hinhAnh} className='w-full h-[800px] object-center cursor-pointer' />
                         </div>
                     )
