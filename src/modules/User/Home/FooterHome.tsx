@@ -3,11 +3,10 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import { useAppSelector } from '../../../redux/hooks'
-import { setLocalStorage } from '../../../utils'
 
-const Footer = () => {
+const FooterHome = () => {
     const data = useAppSelector((state) => state.dataMovie.cinemasId)
-    setLocalStorage('cinemaId', data)
+    console.log('data: ', data);
     return (
         <footer className="bg-white rounded-lg shadow dark:bg-gray-900 m-4">
             <div className="w-full max-w-screen-xl mx-auto p-4 md:py-8">
@@ -35,4 +34,4 @@ const Footer = () => {
     )
 }
 
-export default Footer
+export default FooterHome

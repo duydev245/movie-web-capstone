@@ -1,14 +1,16 @@
 
 import React from 'react';
-import type { FormProps, TableProps } from 'antd';
-import { Button, Checkbox, Col, Form, Input, Row, Space, Table, Tag } from 'antd';
+import type { FormProps } from 'antd';
+import { Col, Form, Input, Row, Table, Tag } from 'antd';
 import { getLocalStorage } from '../../../utils';
 import { Content } from 'antd/es/layout/layout';
+import { useAppSelector } from '../../../redux/hooks';
 
 const ProfilePage = () => {
 
     type FieldType = {
         username?: string;
+        fullname?: string;
         password?: string;
         email?: string;
         phone?: string;
@@ -27,7 +29,7 @@ const ProfilePage = () => {
     const columns = [
 
         {
-            title: <h4>Tên ghế</h4>,
+            title: <h4>Số ghế</h4>,
             key: 'ten-ghe',
             dataIndex: 'tenGhe',
 
@@ -59,7 +61,8 @@ const ProfilePage = () => {
     ];
 
     const listBooked = getLocalStorage('listChair')
-    console.log('list: ', listBooked);
+
+    const currentUser = useAppSelector((state) => state.user.currentUser)
 
     const dataSource = listBooked || []
 
@@ -67,10 +70,10 @@ const ProfilePage = () => {
 
         <Content className='mx-auto max-w-8xl mt-20'>
             <Row gutter={24}>
-                <Col className='flex flex-col justify-center items-center' span={12}>
-                    <h1 className='text-center'>Thông tin tài khoản</h1>
+                <Col className='flex flex-col items-center' span={12}>
                     <div className='text-center'>
-                        <img className='rounded-full' src="https://ssl.gstatic.com/onebox/media/sports/headshots/SD5iRx-eis3AUVvq_108x108.jpg" alt="" />
+                        <h1 className='text-center'>Thông tin tài khoản</h1>
+                        <img className='rounded-full mt-5' src="https://ssl.gstatic.com/onebox/media/sports/headshots/SD5iRx-eis3AUVvq_108x108.jpg" alt="" />
                     </div>
                     <Form
                         className='mt-5 w-full max-w-2xl'
@@ -78,7 +81,12 @@ const ProfilePage = () => {
                         labelCol={{ span: 5 }}
                         labelAlign='left'
                         wrapperCol={{ span: 15 }}
-                        initialValues={{ remember: true }}
+                        initialValues={{
+                            username: currentUser?.taiKhoan,
+                            fullname: currentUser?.hoTen,
+                            email: currentUser?.email,
+                            phone: currentUser?.soDT,
+                        }}
                         onFinish={onFinish}
                         onFinishFailed={onFinishFailed}
                         autoComplete="off"
@@ -92,16 +100,16 @@ const ProfilePage = () => {
                         </Form.Item>
 
                         <Form.Item<FieldType>
-                            label={<h4>Mật khẩu</h4>}
-                            name="password"
+                            label={<h4>Họ và Tên</h4>}
+                            name="fullname"
                             rules={[{ message: 'Please input your password!' }]}
                         >
-                            <Input.Password />
+                            <Input />
                         </Form.Item>
 
                         <Form.Item<FieldType>
                             label={<h4>Email</h4>}
-                            name="phone"
+                            name="email"
                             rules={[{ message: 'Please input your password!' }]}
                         >
                             <Input />

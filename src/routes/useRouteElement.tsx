@@ -1,6 +1,4 @@
-import { Navigate, Outlet, useRoutes } from 'react-router-dom';
-import { AdminLayout } from '../layouts/AdminLayout';
-import { AuthLayout } from '../layouts/AuthLayout';
+import { Navigate, Outlet, useLocation, useRoutes } from 'react-router-dom';
 import { AccountSettings } from "../modules/Admin/AccountSettings";
 import { CinemaManagement } from "../modules/Admin/CinemaManagement";
 import { MovieManagement } from "../modules/Admin/MovieManagement";
@@ -14,8 +12,8 @@ import { HomePage } from '../modules/User/Home';
 import { MovieDetail } from '../modules/User/MovieDetailPage';
 import { BookingTicketPage } from '../modules/User/BookingTicket';
 import { ProfilePage } from '../modules/User/Profile';
-// import { UserLayout } from '../layouts/UserLayout';
-// import { HomePage } from '../modules/User/Home';
+import { AuthLayout } from '../layouts/UserLayout/AuthLayout';
+import { AdminLayout } from '../layouts/AdminLayout';
 
 const RejectedRouter = () => {
   const { currentUser } = useAppSelector((state) => state.user);
@@ -112,27 +110,31 @@ const useRouteElement = () => {
         {
           path: PATH.HOME,
           element:
-            <UserLayout>
-              <HomePage />
-            </UserLayout>
+            <HomePage />
         },
         //Movie details page
         {
           path: PATH.MOVIE_DETAILS,
           element:
-            <MovieDetail />
+            <UserLayout>
+              <MovieDetail />
+            </UserLayout>
         },
         //Booking page
         {
           path: PATH.BOOKING,
           element:
-            <BookingTicketPage />
+            <UserLayout>
+              <BookingTicketPage />
+            </UserLayout>
         },
         //Profile User
         {
           path: PATH.PROFILE,
           element:
-            <ProfilePage />
+            <UserLayout>
+              <ProfilePage />
+            </UserLayout>
         },
       ]
 
