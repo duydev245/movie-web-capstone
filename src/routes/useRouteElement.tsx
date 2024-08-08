@@ -43,6 +43,20 @@ const ProtectedRouter = () => {
   );
 };
 
+const ProtectedUserRouter = () => {
+  const { currentUser } = useAppSelector((state) => state.user);
+
+  if (currentUser === null) {
+    return <Navigate to={PATH.LOGIN} />;
+  }
+
+  return currentUser.maLoaiNguoiDung === "KhachHang" ? (
+    <Outlet />
+  ) : (
+    <Navigate to={PATH.HOME} />
+  );
+};
+
 const useRouteElement = () => {
   const routes = useRoutes([
     // Auth
@@ -111,24 +125,25 @@ const useRouteElement = () => {
         },
       ],
     },
+    // Home
+    {
+      path: PATH.HOME,
+      element: <HomePage />,
+    },
+    //Movie details page
+    {
+      path: PATH.MOVIE_DETAILS,
+      element: (
+        <UserLayout>
+          <MovieDetail />
+        </UserLayout>
+      ),
+    },
     // User
     {
       path: "/",
+      element: <ProtectedUserRouter />,
       children: [
-        //Home
-        {
-          path: PATH.HOME,
-          element: <HomePage />,
-        },
-        //Movie details page
-        {
-          path: PATH.MOVIE_DETAILS,
-          element: (
-            <UserLayout>
-              <MovieDetail />
-            </UserLayout>
-          ),
-        },
         //Booking page
         {
           path: PATH.BOOKING,

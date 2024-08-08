@@ -1,4 +1,3 @@
-import React from "react";
 import { Link } from "react-router-dom";
 import { Link as ScrollLink } from "react-scroll";
 import { useAppSelector } from "../../../redux/hooks";
@@ -80,7 +79,7 @@ const HeaderHome = () => {
         </div>
         <div>
           {!currentUser && (
-            <ul className="list-none">
+            <ul className="list-none flex">
               <li>
                 <Link
                   to="auth/login"
@@ -102,7 +101,7 @@ const HeaderHome = () => {
             </ul>
           )}
           {currentUser && (
-            <ul className="list-none">
+            <ul className="list-none flex">
               <li>
                 <Link
                   to="/profile"
