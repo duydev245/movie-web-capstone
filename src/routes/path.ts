@@ -13,6 +13,5 @@ export const PATH = {
   ADMIN_MOVIE: "/admin/movie",
   ADMIN_USER: "/admin/user",
   ADMIN_CINEMA: "/admin/cinema",
-  ADMIN_SHOWTIME: "/admin/show-time",
   ADMIN_ACCOUNT_SETTINGS: "/admin/account-settings",
 };

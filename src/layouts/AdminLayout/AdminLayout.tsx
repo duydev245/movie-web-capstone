@@ -1,7 +1,6 @@
 import {
   MenuFoldOutlined,
   MenuUnfoldOutlined,
-  UploadOutlined,
   UserOutlined,
   VideoCameraOutlined,
   SettingOutlined,
@@ -64,11 +63,6 @@ const AdminLayout: FC<AdminLayoutProps> = ({ children }) => {
               key: PATH.ADMIN_CINEMA,
               icon: <BankOutlined />,
               label: "Cinema Management",
-            },
-            {
-              key: PATH.ADMIN_SHOWTIME,
-              icon: <UploadOutlined />,
-              label: "Show Time",
             },
             {
               key: PATH.ADMIN_ACCOUNT_SETTINGS,

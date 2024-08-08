@@ -8,7 +8,6 @@ import { LoginPage } from "../modules/Auth/Login";
 import { RegisterPage } from "../modules/Auth/Register";
 import { useAppSelector } from "../redux/hooks";
 import { PATH } from "./path";
-import { ShowTime } from "../modules/Admin/ShowTime";
 import { AccountSettings } from "../modules/Admin/AccountSettings";
 
 const RejectedRouter = () => {
@@ -92,14 +91,6 @@ const useRouteElement = () => {
           element: (
             <AdminLayout>
               <CinemaManagement />
-            </AdminLayout>
-          ),
-        },
-        {
-          path: PATH.ADMIN_SHOWTIME,
-          element: (
-            <AdminLayout>
-              <ShowTime />
             </AdminLayout>
           ),
         },
