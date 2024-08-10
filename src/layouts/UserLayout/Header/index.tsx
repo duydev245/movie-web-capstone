@@ -2,9 +2,16 @@ import { UserOutlined } from "@ant-design/icons";
 import React from "react";
 import { Link } from "react-router-dom";
 import { useAppSelector } from "../../../redux/hooks";
+import { Button } from "antd";
+import { removeLocalStorage } from "../../../utils";
 
 const Header = () => {
   const currentUser = useAppSelector((state) => state.user.currentUser);
+
+  const handleLogOut = () => {
+    removeLocalStorage("user");
+    window.location.reload();
+  };
   return (
     <nav
       style={{ backgroundColor: "#F3F7EC" }}
@@ -53,11 +60,11 @@ const Header = () => {
                 className="no-underline block py-2 px-3 text-black text-xl bg-blue-700 rounded md:bg-transparent md:p-1 dark:bg-blue-600 md:dark:bg-transparent hover:text-red-600"
                 aria-current="page"
               >
-                Home
+                Trang chủ
               </Link>
             </li>
             {currentUser && (
-              <li>
+              <li className="flex items-center">
                 <Link
                   to="/profile"
                   className="no-underline block py-2 px-3 text-gray-700 text-xl bg-blue-700 rounded md:bg-transparent md:p-1 dark:bg-blue-600 md:dark:bg-transparent hover:text-red-600"
@@ -65,7 +72,17 @@ const Header = () => {
                 >
                   <UserOutlined /> {currentUser?.taiKhoan}
                 </Link>
+                <Button
+                  onClick={handleLogOut}
+                  className="mx- font-medium"
+                  size="small"
+                  type="default"
+                  danger
+                >
+                  Đăng xuất
+                </Button>
               </li>
+
             )}
           </ul>
         </div>

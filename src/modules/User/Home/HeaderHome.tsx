@@ -59,7 +59,7 @@ const HeaderHome = () => {
               <ScrollLink
                 to="listMovie"
                 smooth={true}
-                className="block py-2 px-3 text-xl text-black bg-blue-700 rounded md:bg-transparent md:p-1  dark:bg-blue-600 md:dark:bg-transparent  hover:text-red-600"
+                className="block cursor-pointer py-2 px-3 text-xl text-black bg-blue-700 rounded md:bg-transparent md:p-1  dark:bg-blue-600 md:dark:bg-transparent  hover:text-red-600"
                 aria-current="page"
               >
                 Lịch chiếu
@@ -69,7 +69,7 @@ const HeaderHome = () => {
               <ScrollLink
                 to="cinemas"
                 smooth={true}
-                className="block py-2 px-3 text-xl text-black bg-blue-700 rounded md:bg-transparent md:p-1  dark:bg-blue-600 md:dark:bg-transparent hover:text-red-600"
+                className="block cursor-pointer py-2 px-3 text-xl text-black bg-blue-700 rounded md:bg-transparent md:p-1  dark:bg-blue-600 md:dark:bg-transparent hover:text-red-600"
                 aria-current="page"
               >
                 Cụm rạp
@@ -86,7 +86,7 @@ const HeaderHome = () => {
                   className="block py-2 px-3 text-black bg-blue-700 rounded md:bg-transparent md:text-blue-700 md:p-1 md:dark:text-blue-500 dark:bg-blue-600 md:dark:bg-transparent  hover:text-red-600 no-underline"
                   aria-current="page"
                 >
-                  Login
+                  Đăng nhập
                 </Link>
               </li>
               <span className="text-xl text-gray-500">|</span>
@@ -96,7 +96,7 @@ const HeaderHome = () => {
                   className="block py-2 px-3 text-black bg-blue-700 rounded md:bg-transparent md:text-blue-700 md:p-1 md:dark:text-blue-500 dark:bg-blue-600 md:dark:bg-transparent  hover:text-red-600 no-underline"
                   aria-current="page"
                 >
-                  Register
+                  Đăng ký
                 </Link>
               </li>
             </ul>
@@ -120,7 +120,7 @@ const HeaderHome = () => {
                   type="default"
                   danger
                 >
-                  Log Out
+                  Đăng xuất
                 </Button>
               </li>
             </ul>
