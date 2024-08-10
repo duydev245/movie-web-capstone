@@ -79,7 +79,7 @@ const HeaderHome = () => {
         </div>
         <div>
           {!currentUser && (
-            <ul className="list-none flex">
+            <ul className="list-none flex justify-center items-center">
               <li>
                 <Link
                   to="auth/login"
@@ -89,6 +89,7 @@ const HeaderHome = () => {
                   Login
                 </Link>
               </li>
+              <span className="text-xl text-gray-500">|</span>
               <li>
                 <Link
                   to="/auth/register"
@@ -101,10 +102,10 @@ const HeaderHome = () => {
             </ul>
           )}
           {currentUser && (
-            <ul className="list-none flex">
+            <ul className="list-none flex items-center">
               <li>
                 <Link
-                  to="/profile"
+                  to={currentUser.maLoaiNguoiDung === 'QuanTri' ? '/admin/user' : '/profile'}
                   className="no-underline block py-2 px-3 text-gray-700 text-xl bg-blue-700 rounded md:bg-transparent md:p-1 dark:bg-blue-600 md:dark:bg-transparent hover:text-red-600"
                   aria-current="page"
                 >
@@ -114,8 +115,8 @@ const HeaderHome = () => {
               <li>
                 <Button
                   onClick={handleLogOut}
-                  className="mx-5 font-medium"
-                  size="large"
+                  className="mx- font-medium"
+                  size="small"
                   type="default"
                   danger
                 >
@@ -124,7 +125,7 @@ const HeaderHome = () => {
               </li>
             </ul>
           )}
-          {}
+          { }
         </div>
       </div>
     </nav>
